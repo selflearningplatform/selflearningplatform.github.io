@@ -1,0 +1,103 @@
+---
+import Base from '../layouts/Base.astro';
+const RAMP = [['void', '#0c0c0c'], ['carbon', '#141414'], ['graphite', '#1b1b1b'], ['iron', '#262626'], ['slate', '#383838'], ['pewter', '#4e4e4e'],
+  ['steel', '#676767'], ['ash', '#828282'], ['fog', '#a3a3a3'], ['chalk', '#cacaca'], ['paper', '#e6e6e6']];
+---
+<Base title="identity" description="SLP identity: principles, logo, color, type and voice.">
+  <div data-page="identity">
+    <section id="principles">
+      <div class="label">01 / principles</div>
+      <p class="intro">Four Japanese design ideas describe what SLP already does. They are a vocabulary for identity and philosophy.</p>
+      <div class="cells">
+        <div><span class="k">簡素</span><div class="t"><strong>kanso</strong><span>simplicity</span></div><p>Remove until only what is needed is left.</p><div class="rule">// one font, no shadows, no gradients</div></div>
+        <div><span class="k">間</span><div class="t"><strong>ma</strong><span>negative space</span></div><p>Empty space is part of the design, not a gap to fill.</p><div class="rule">// the ~ buffer, the clear space around the mark</div></div>
+        <div><span class="k">渋い</span><div class="t"><strong>shibui</strong><span>quiet beauty</span></div><p>Understated. Nothing is decorated for its own sake.</p><div class="rule">// hierarchy by lightness, not size</div></div>
+        <div><span class="k">静寂</span><div class="t"><strong>seijaku</strong><span>calm</span></div><p>The interface stays silent while you study.</p><div class="rule">// chrome lives in two bars; content stays quiet</div></div>
+      </div>
+    </section>
+
+    <section id="logo">
+      <div class="label">02 / logo</div>
+      <div class="logos">
+        <figure class="wide"><div class="tile"><img src="/app/assets/lockup-horizontal.png" alt="Horizontal lockup" style="width:100%;max-width:760px"></div><figcaption><span>primary · horizontal lockup</span><span>README header, splash, slides, social</span></figcaption></figure>
+        <figure><div class="tile"><img src="/app/assets/lockup-stacked.png" alt="Stacked lockup" style="width:80%"></div><figcaption><span>stacked lockup</span><span>square and portrait formats</span></figcaption></figure>
+        <figure><div class="tile"><img src="/app/assets/mark.png" alt="独 mark" style="width:46%"></div><figcaption><span>mark · 独</span><span>favicon, avatar</span></figcaption></figure>
+        <figure><div class="tile light"><img src="/app/assets/lockup-stacked.png" alt="Inverse lockup" style="width:80%"></div><figcaption><span>inverse</span><span>light theme, print</span></figcaption></figure>
+      </div>
+      <div class="rules-grid">
+        <div>
+          <strong>Clear space</strong>
+          <div class="box clear"><div><img src="/app/assets/mark.png" alt="" style="width:112px"></div></div>
+          <p>Keep empty space of at least ¼ of the mark's height on every side.</p>
+        </div>
+        <div class="wide">
+          <strong>Minimum size</strong>
+          <div class="box sizes">
+            <div><img src="/app/assets/mark.png" alt="" style="width:16px">mark 16px</div>
+            <div><img src="/app/assets/lockup-stacked.png" alt="" style="width:96px">stacked 96px</div>
+            <div><img src="/app/assets/lockup-horizontal.png" alt="" style="width:180px">horizontal 180px</div>
+          </div>
+          <p>Below these widths the Latin line stops reading. Use the 独 mark alone.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="color">
+      <div class="label">03 / color</div>
+      <p class="intro">The brand is ink on paper: black and white, with the e-ink grey ramp in between. Hierarchy comes from lightness only. The brand never takes a hue.</p>
+      <div class="inks">
+        <div class="sumi"><span class="k">墨</span><div><strong>sumi · ink</strong><span>#0c0c0c · --color-void</span></div></div>
+        <div class="kami"><span class="k">紙</span><div><strong>kami · paper</strong><span>#e6e6e6 · --color-paper</span></div></div>
+      </div>
+      <div class="ramp">{RAMP.map(([name, hex]) => <div><i style={`background:${hex}`}></i><span>{name}<small>{hex}</small></span></div>)}</div>
+      <p class="note">// accent is #d4d4d4. state is always a glyph plus a grey (✓ ✕ NORMAL INSERT), so it reads without hue</p>
+    </section>
+
+    <section id="type">
+      <div class="label">04 / typography</div>
+      <div class="cols">
+        <div class="prose">
+          <span class="muted small">latin · JetBrains Mono 400 / 700</span>
+          <div class="specimen">Aa 01 ❯</div>
+          <p>abcdefghijklmnopqrstuvwxyz<br>ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>0123456789 ~ / ❯ ✓ ✕ · [ ] //</p>
+          <p class="muted">Everything in the product and the brand: chrome, body, headings.</p>
+        </div>
+        <div class="prose">
+          <span class="muted small">japanese · Noto Sans JP 700 / 900</span>
+          <div class="specimen jp">独学</div>
+          <p style="font-family:var(--kanji)">独学 · 簡素 · 間 · 渋い · 静寂</p>
+          <p class="muted">Only for kanji in brand material: section marks, the name gloss, a single character on a cover. Never for running text.</p>
+        </div>
+      </div>
+      <div class="rows" style="margin-top:56px">
+        <div><span class="muted">page title · 22 bold</span><span style="font-size:22px;font-weight:700;color:var(--paper)">Fundamentals of Software Architecture</span></div>
+        <div><span class="muted">heading · 17 bold</span><span style="font-size:17px;font-weight:700;color:var(--paper)">1. Introduction</span></div>
+        <div><span class="muted">body · 14 / 1.71</span><span style="font-size:14px;color:var(--paper)">Architecture is about the important stuff, whatever that is.</span></div>
+        <div><span class="muted">chrome · 13</span><span>1 notes   2 exams   3 settings</span></div>
+        <div><span class="muted">caption · 12</span><span class="muted small">NORMAL  ~/notes/topics  utf-8[unix]</span></div>
+      </div>
+    </section>
+
+    <section id="voice">
+      <div class="label">05 / voice</div>
+      <div class="cols">
+        <div class="prose">
+          <p>SLP talks like a good terminal: lowercase, short, exact. It says what happened and what to do next, then goes quiet.</p>
+          <ul class="dash">
+            <li>- lowercase labels, commands as nouns</li>
+            <li>- one fact per line</li>
+            <li>- no exclamation marks, no praise</li>
+            <li>- glyph + word for state</li>
+          </ul>
+        </div>
+        <div class="voice">
+          <div><span>✓ saved</span><s>Your note was saved successfully!</s></div>
+          <div><span>✓ Score 70% · pass</span><s>Great job, you passed! 🎉</s></div>
+          <div><span>✓ no topics yet</span><s>Looks like you haven't added anything yet</s></div>
+          <div><span>✓ exam --check</span><s>Submit my answers</s></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+</Base>

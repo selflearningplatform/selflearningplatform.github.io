@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base>
+  <link slot="head" rel="preload" href="/app/assets/lockup-horizontal.png" as="image" fetchpriority="high">
+  <div data-page="home">
+    <header class="cover">
+      <div class="cover-top"><span>Set yout learning path</span><span>open source · MIT</span></div>
+      <div class="cover-hero">
+        <img src="/app/assets/lockup-horizontal.png" alt="独学 Self Learning Platform" width="2816" height="1536" fetchpriority="high">
+        <div class="btns">
+          <a class="btn primary" href="/docs/install">get started</a>
+          <a class="btn" href="https://github.com/GustavoPenaBeltrami/self-learning-platform">view on github</a>
+        </div>
+      </div>
+      <div class="meta">
+        <div><div></div><div>SLP · Self Learning Platform</div></div>
+        <div><div></div><div>独学 · dokugaku</div></div>
+        <div><div></div><div>An agent-powered hub for self-learners</div></div>
+      </div>
+    </header>
+
+    <section>
+      <div class="label">01 / name</div>
+      <div class="cols">
+        <div class="gloss">
+          <div><b>独</b><span>doku · alone, by oneself</span></div>
+          <div><b>学</b><span>gaku · learning, study</span></div>
+        </div>
+        <div class="prose">
+          <h2>独学 (dokugaku) is the Japanese word for self-study.</h2>
+          <p>It names exactly what the platform is for: one person, one topic, and the discipline to keep going. The agent teaches, quizzes and grades, but the learning stays yours.</p>
+          <p>A book, a certification, a tool's documentation, a course: everything you study is a topic, and SLP builds the full loop around it.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="label">02 / why</div>
+      <div class="cols">
+        <div class="prose">
+          <h2>The method comes built in.</h2>
+          <p>The knowledge is nothing if you cannot externalize in your own way. You need a method where you have an input and an output channel with the appropiate feedback.</p>
+        </div>
+        <div class="prose">
+          <h2>Everything stays on your disk.</h2>
+          <p>No need for internet connection, no need to share your private learning session. You are the owner, as it should be.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="label">03 / the learning loop</div>
+      <p class="intro">The study loop consists of acquiring knowledge from any source, internalizing it with logic, being able to express it, and obtaining feedback.</p>
+      <div class="cells">
+        <div><div class="t"><strong>prepare</strong></div><p>The agent teaches until it's understood, not memorized, and turns your material into notes.</p><div class="rule">/slp-teach · /slp-summarize</div></div>
+        <div><div class="t"><strong>practice</strong></div><p>Exams you sit in the local app, and applied exercises: code, an ADR, a critique.</p><div class="rule">/slp-exam · /slp-exercises</div></div>
+        <div><div class="t"><strong>feedback</strong></div><p>Every attempt is graded against a rubric, with what you got wrong written down.</p><div class="rule">/slp-grade</div></div>
+        <div><div class="t"><strong>review</strong></div><p>Leitner review across topics so it doesn't fade.</p><div class="rule">/slp-review · /slp-session</div></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="label">04 / any agent</div>
+      <div class="cols">
+        <div class="prose">
+          <h2>It doesn't depend on any particular agent.</h2>
+          <p>The skills use the <code>SKILL.md</code> format and <code>AGENTS.md</code> explains the project to any of them, with a cloud model or a local one via Ollama.</p>
+        </div>
+        <ul class="dash">
+          <li>- Claude Code</li><li>- Codex</li><li>- Cursor</li><li>- opencode + Ollama</li><li>- Any llm</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+</Base>

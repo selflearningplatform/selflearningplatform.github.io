@@ -1,0 +1,43 @@
+---
+import '../styles/global.css';
+
+const { title, description = 'SLP, the Self Learning Platform: an agent-powered hub for self-learners.' } = Astro.props;
+const path = Astro.url.pathname;
+const current = href => (href === '/' ? path === '/' : path.startsWith(href)) ? 'page' : undefined;
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title ? `独学 · ${title}` : '独学 · SLP Self Learning Platform'}</title>
+<meta name="description" content={description}>
+<link rel="icon" href="/app/assets/favicon.svg">
+<link rel="preload" href="/app/vendor/jetbrains-mono/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/app/vendor/jetbrains-mono/JetBrainsMono-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<slot name="head" />
+<script is:inline>
+  const legacy = location.hash.match(/^#(docs\/[\w-]+|docs|identity|home)$/);
+  if (legacy) location.replace('/' + legacy[1].replace('home', ''));
+</script>
+</head>
+
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a href="/" aria-label="home"><img src="/app/assets/mark.png" alt="独学" width="24" height="24"></a>
+    <nav>
+      <a href="/" aria-current={current('/')}>home</a>
+      <a href="/docs/overview" aria-current={current('/docs')}>docs</a>
+      <a href="/identity" aria-current={current('/identity')}>identity</a>
+      <a href="https://github.com/GustavoPenaBeltrami/self-learning-platform">github ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <slot />
+  <footer><span>独学 · SLP Self Learning Platform  · By <a target="_blank" href="https://www.linkedin.com/in/gustavo-pena-beltrami/">Gustavo</a> to anyone</span><span><a href="https://github.com/GustavoPenaBeltrami/self-learning-platform/blob/main/LICENSE">MIT</a> · ~ EOF</span></footer>
+</main>
+</body>
+</html>
