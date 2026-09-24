@@ -1,0 +1,639 @@
+# Overview
+
+SLP is a self-hosted study environment you fully own: it runs on your machine, needs no subscription, and works with any agent and any model, local or paid.
+
+```repo
+self-learning-platform/
+├── AGENTS.md    # read by any agent
+├── agent/
+│   ├── skills/  # slp-*/SKILL.md
+│   └── agents/  # researcher, teacher-*
+├── app/         # uv run slp
+└── topics/
+    └── example/
+```
+
+Four pieces talk to each other through the filesystem:
+
+| path | role |
+| --- | --- |
+| `agent/skills/` | the method: teach, build exams and exercises, grade, review |
+| `agent/agents/` | a researcher that verifies, and a teacher per topic |
+| `topics/<slug>/` | notes in Markdown, exams in JSON, attempts, progress. No database |
+| `app/` | local notebook and exam simulator, with dictation, Mermaid and LaTeX |
+
+## Layers
+
+- **core**: the app, handwritten notes, sitting exams and reviewing. Needs no model at all
+- **agent layer**: skills and agents that automate teaching, exams, grading and review, on whatever model you plug in
+
+# Getting started
+
+Three things, then one prompt.
+
+```shell
+git clone https://github.com/GustavoPenaBeltrami/self-learning-platform.git
+cd self-learning-platform
+uv run slp
+```
+
+```agent
+Read AGENTS.md and run slp-setup.
+```
+
+## Requirements
+
+- **uv**: the only thing you install. It fetches Python and the packages
+- **a coding agent**: any, with permission in the repo folder. Claude Code recommended
+- **internet**: for the first `uv run slp` only. After that it aims to work offline: Mermaid, KaTeX and fonts ship in `app/vendor/`
+
+## Path
+
+1. [install](install.md) uv and clone the repo
+2. [setup](setup.md) your agent with `slp-setup`
+3. [init](init.md) your first topic with `/slp-init`
+4. [start the app](cli.md) with `uv run slp`
+
+# Installation
+
+[uv](https://docs.astral.sh/uv/) manages Python and the dependencies. Install it once, then clone.
+
+```macOS · linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+```windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+```clone
+git clone https://github.com/GustavoPenaBeltrami/self-learning-platform.git
+cd self-learning-platform
+```
+
+- **requires**: python ≥ 3.9, fetched by uv
+- **deps**: `mlx-whisper` on Apple Silicon, `faster-whisper` elsewhere
+- **keep your topics**: `git remote set-url origin <your-repo>`
+
+// want dictation ready offline? run `uv run slp setup` right after cloning
+
+# Setup
+
+Open your agent at the repo root and send the prompt. It detects which agent it is and exposes the skills in that agent's format: symlinks if it supports them, conversion if not.
+
+```what it runs · claude code
+mkdir -p .claude
+ln -s ../agent/skills .claude/skills
+ln -s ../agent/agents .claude/agents
+```
+
+- **writes**: only local files; each one goes to `.git/info/exclude`, never to `.gitignore`
+- **source**: `agent/` is the single source. Edit skills there, then rerun if you use conversion
+
+| agent | instructions · skills · subagents |
+| --- | --- |
+| Claude Code | `CLAUDE.md` · `.claude/skills/` · `.claude/agents/` |
+| Codex | `AGENTS.md` · `.agents/skills/` · — |
+| Gemini CLI | `GEMINI.md` · `.gemini/skills/` · — |
+| others | usually `AGENTS.md` or a rules folder |
+
+Full reference: [slp-setup](slp-setup.md).
+
+# Init your first topic
+
+A topic is anything you study: a book, a certification, a paper, a course. Run `/slp-init` and the agent interviews you, creates the folder, checks your level and offers a dedicated teacher.
+
+```creates
+topics/<slug>/
+├── topic.json    # goals, languages, sources
+├── learning.md   # mission, glossary, record
+└── progress/
+    ├── status.md
+    └── log.md
+```
+
+`topics/example/` is a small one to look at. Your own topics are git-ignored.
+
+Full reference: [slp-init](slp-init.md) · [topics/\<slug>](topics.md).
+
+# Run the app
+
+Starts the local server and opens the notebook in your browser. If a server is already running, it just opens the page.
+
+```output
+Profile: online
+Study app at http://localhost:8321/app/views/notes.html  (ctrl+c to stop)
+```
+
+- **url**: `http://localhost:8321/app/views/notes.html`
+- **views**: notes · exam · project · settings
+
+## Commands
+
+| command | what it does |
+| --- | --- |
+| `uv run slp` | start the app |
+| `uv run slp setup` | download the dictation model ahead of time |
+| `uv run slp transcribe <audio> [lang]` | print the transcription of an audio file |
+
+# Three windows
+
+Side by side. Two monitors help.
+
+```layout
+┌──────────┬──────────┬──────────┐
+│ material │   app    │  agent   │
+│  pdf     │  notes   │  /slp-*  │
+│  course  │  exams   │          │
+└──────────┴──────────┴──────────┘
+```
+
+- **1 · material**: the PDF, the course, the docs. Whatever you're studying
+- **2 · app**: `uv run slp` in the browser: notes, exams, progress
+- **3 · agent**: open at the repo root. Teaches, builds exams, grades
+
+# Language
+
+Each topic sets default languages for what the agent writes. Ask for another in any single request ("give me the exam in English") without touching the file. The agent chats in whatever language you write in.
+
+```topic.json
+"language": {
+"source": "en",
+"notes": "es",
+"exams": "en"
+}
+```
+
+| key | sets the default for |
+| --- | --- |
+| `source` | the language of the material |
+| `notes` | notes, summaries and lessons |
+| `exams` | exams, exercises and feedback |
+
+# Dictation
+
+Dictate notes or answer oral exam questions out loud. Runs locally with Whisper; without it, the mic falls back to your OS dictation.
+
+```windows arm
+uv run --python cpython-3.12-windows-x86_64-none slp
+```
+
+```transcribe by hand
+uv run slp transcribe attempts/2026-09-24T1030-p3.webm en
+```
+
+| system | engine · disk |
+| --- | --- |
+| macOS Apple Silicon | mlx-whisper (GPU) · ~2.7 GB |
+| macOS Intel, Linux, Windows x64 | faster-whisper (CPU) · ~0.7 GB |
+| Windows ARM | faster-whisper, emulated x64 · ~0.7 GB |
+
+- **model**: `small` by default on CPU, `turbo` (~1.6 GB) is more accurate. Change it in `/settings`
+- **oral exams**: audio is saved next to the attempt and graded on the transcription, not pronunciation
+
+# Profiles
+
+How the agent layer and dictation run. Chosen at setup, changeable in `/settings`. The core is the same in all of them.
+
+```reference stack · offline
+OLLAMA_CONTEXT_LENGTH=32768 ollama serve
+# model
+qwen3-coder:30b   # or gpt-oss:20b on 16 GB
+# agent
+opencode
+```
+
+| profile | behaviour |
+| --- | --- |
+| `auto` | default. Online when there is a connection at start, offline otherwise |
+| `online` | a paid agent, web lookups, the largest dictation model. Recommended |
+| `offline` | everything on your machine. Nothing is fetched; what is missing falls back |
+
+// grading and teacher judgment are weaker on local models: treat that output as a draft
+
+# Session
+
+Entry point of a study session. Surveys every topic, asks what you want to do today and hands off to the right skill. It orchestrates; it doesn't write.
+
+```usage
+/slp-session
+```
+
+```output
+http-basics   ch-02 · 1 attempt ungraded
+fosa          3 cards due in review
+# what do you want to do today?
+```
+
+- **triggers**: "let's start", "what do I study today", "what's pending"
+- **reads**: `topics/*/topic.json`, `progress/status.md`, ungraded attempts, overdue reviews
+- **writes**: nothing
+
+## Steps
+
+1. survey, without asking
+2. complete `topic.json` if needed
+3. ask for the session goal
+4. hand off
+
+# Agent setup
+
+Exposes `agent/skills` and `agent/agents` in the running agent's native format, without touching anything versioned.
+
+```usage
+Read AGENTS.md and run slp-setup.
+```
+
+```opencode.json · offline
+{
+"provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": { "baseURL": "http://localhost:11434/v1" },
+      "models": { "qwen3-coder:30b": {} }
+    }
+}
+}
+```
+
+- **triggers**: first time with a new agent, "set up the project", "install the skills"
+- **reads**: `profile` in `settings.json`, the agent's current docs
+- **writes**: symlinks or converted files, plus `.git/info/exclude`
+
+## Order of preference
+
+1. nothing: the agent reads `AGENTS.md`
+2. symlink to `agent/`
+3. conversion, only for what doesn't fit
+
+# New topic
+
+Registers a new topic so the first session starts with a clear mission and the level already measured.
+
+```usage
+/slp-init
+I want to start studying HTTP.
+```
+
+```output
+topics/http-basics/
+├── topic.json
+├── learning.md
+└── progress/{status,log}.md
+agent/agents/teacher-http-basics.md
+```
+
+- **triggers**: "I want to start studying X", "create a new topic"
+- **asks**: title, type (book, certification, documentation, course, practice), area, goals, reason, languages, sources
+- **writes**: `topic.json`, `learning.md`, `progress/`, optional `agent/agents/teacher-<slug>.md`
+
+## Steps
+
+1. interview
+2. generate the filesystem
+3. informal level diagnosis
+4. the topic's teacher agent
+5. wrap up
+
+# Summarize
+
+Summarizes a text and appends it to a note, following the format the notes already use.
+
+```usage
+/slp-summarize resources/ch-02.pdf
+into notes/02-caching.md, extensive
+```
+
+- **source**: pasted, attached, a file in `resources/`, or a `path` in `links`
+- **levels**: `compact` · `medium` (default) · `extensive`
+- **writes**: appends to `topics/<slug>/notes/*.md` in `language.notes`
+
+# Teach
+
+Teaches so it ends up understood, not memorized. Probes your real level, plans the topic as a dependency graph and builds it node by node from truths you already accept.
+
+```usage
+/slp-teach why is PUT idempotent and POST not?
+```
+
+````notes/03-idempotency.md
+# Idempotency
+```mermaid
+graph TD
+safe --> idempotent
+idempotent --> retries
+```
+## Why it matters
+...
+````
+
+- **triggers**: "teach me", "explain", "I don't get it", any explanation
+- **principles**: unconditional truths first · "how could I have discovered this myself?"
+- **writes**: a new `notes/NN-title.md`, `learning.md`, `progress/status.md`
+
+## Process
+
+1. probe, never skipped
+2. plan the dependency graph
+3. teach, node by node
+
+# Exercises
+
+An exam tests whether something was understood. An exercise forces you to use it to produce something new: code, an ADR, a critique, an explanation.
+
+```output
+exercises/adr-topic-vs-queue/
+├── prompt.md
+└── attempts/
+    └── 2026-09-24T1030.md
+```
+
+- **triggers**: "I want an exercise", "apply what I learned"
+- **writes**: `exercises/<slug>/prompt.md`, you submit in `attempts/`
+- **graded by**: [slp-grade](slp-grade.md)
+
+# Exam
+
+Builds a JSON exam from content you paste, audited first against the topic's progress. You sit it in the app, which shuffles the questions.
+
+```exam.json
+{
+"title": "HTTP — Ch 1: Methods",
+"questions": [
+    {
+      "type": "multiple_choice",
+      "q": "Which method is idempotent?",
+      "options": ["POST", "PATCH", "PUT", "CONNECT"],
+      "answer": 2,
+      "explanation": "..."
+    },
+    {
+      "type": "open",
+      "q": "When is 409 better than 400?",
+      "rubric": ["...", "...", "..."]
+    }
+]
+}
+```
+
+- **writes**: `exams/<exam>/exam.json`
+- **size**: 10–15 questions: ~30% definitions, ~40% application, ~30% trade-offs
+
+## Question types
+
+| type | carries |
+| --- | --- |
+| `multiple_choice` | 4 `options`, `answer` (0-based), `explanation` |
+| `open` | `rubric`: 3–5 checkable points |
+| `oral` | like open, answered by voice |
+| `practical` | `rubric` |
+
+# Grade
+
+Checks each rubric or prompt point, says what's missing (not just "it's wrong"), and records it so review and the next session can use it.
+
+```attempts/2026-09-24T1030.md
+# Attempt — ch-01 — 2026-09-24 10:30
+## [02] Open — 409 vs 400
+✓ names the conflict with state
+✕ no decision criterion
+## What to improve
+...
+```
+
+- **pending**: `attempts/<date>.<ext>` without its `<date>.md`
+- **writes**: `attempts/<date>.md`, `learning.md`, `progress/log.md`, `status.md`
+- **date**: always `YYYY-MM-DDTHHmm`
+
+# Review
+
+Spaced, interleaved review with Leitner cards. Mixes topics, prioritizes what failed, and rewrites questions so they require recall, not recognition.
+
+```boxes
+fast   ██████  new or failed
+medium ███     1 correct
+slow   █       several correct
+         └─ 3× correct → retired
+```
+
+- **boxes**: fast → medium → slow. One miss sends a card back to fast
+- **retire**: 3 correct in a row in slow; then a weekly maintenance review
+- **size**: 12–15 questions, at least two topics when there are two
+- **writes**: `topics/review/exams/YYYY-MM-DD/exam.json`
+
+# Researcher
+
+Verifies a fact or maps a topic and returns a short report with sources. Used before teaching anything that isn't certain. Works in an isolated context.
+
+```report
+correct              PUT is idempotent (RFC 9110 §9.2.2)
+correct (local only) ...
+not verified on web  ...
+Gaps: ...
+```
+
+- **tools**: WebSearch, WebFetch, Read, Grep, Glob
+- **source mode**: follows the topic's `sources_mode`: `web`, `local` or `both`
+- **conflicts**: picks one with confidence; the topic's own material wins unless outdated
+
+## Process
+
+1. break the question into 2–4 facets
+2. search from different angles
+3. read the 2–3 best pages whole
+4. synthesize, with sources
+
+# Teacher
+
+One per topic, generated by [slp-init](slp-init.md). A specialist who would teach this in real life, never a generic "\<area> teacher".
+
+```frontmatter
+---
+name: teacher-http-basics
+description: ...
+---
+## How you teach
+## What you don't do
+```
+
+- **used by**: [slp-teach](slp-teach.md) when the topic has one
+- **git**: personal and ignored
+
+# Topic folder
+
+Everything about a topic lives in one folder, as Markdown and JSON. It reads fine on GitHub, in Obsidian or in any editor.
+
+```tree
+topics/<slug>/
+├── topic.json
+├── learning.md
+├── resources/
+├── notes/
+│   └── 01-<chapter>.md
+├── exams/
+│   └── <exam>/
+│       ├── exam.json
+│       └── attempts/
+│           ├── <date>.json
+│           ├── <date>-p3.webm
+│           └── <date>.md
+├── exercises/
+│   └── <exercise>/
+│       ├── prompt.md
+│       └── attempts/<date>.<ext>
+└── progress/
+    ├── status.md
+    └── log.md
+```
+
+- **git**: `topics/*` is ignored except `topics/example/`
+- **review**: `topics/review/` holds cross-topic reviews
+
+# topic.json
+
+Identity and preferences of a topic. Written by [slp-init](slp-init.md), completed by [slp-session](slp-session.md).
+
+```topics/example/topic.json
+{
+"title": "Example topic: HTTP basics",
+"type": "documentation",
+"area": "web",
+"goals": [],
+"language": { "source": "en", "notes": "en", "exams": "en" },
+"routine": { "cadence": "", "session": "" },
+"sources_mode": "both",
+"links": [
+    { "title": "MDN: Overview of HTTP",
+      "url": "https://developer.mozilla.org/..." },
+    { "title": "HTTP: The Definitive Guide",
+      "path": "~/Books/http.pdf" }
+]
+}
+```
+
+| field | meaning |
+| --- | --- |
+| `type` | book · certification · documentation · course · practice |
+| `area` | kebab-case, shared across topics |
+| `goals` | 1–3 concrete goals |
+| `language` | [source · notes · exams](language.md) |
+| `routine` | cadence and session length |
+| `sources_mode` | `web` · `local` · `both` |
+| `links` | sources: a `url` or a local `path` |
+
+# learning.md
+
+The topic's memory: what you've shown you know, and what you got wrong and corrected. Every skill reads it before writing.
+
+```shape
+# Learning — <topic>
+## Mission
+## Glossary
+## Record
+### 0002 — Believed "scalable" implied "distributed" — corrected
+### 0001 — Source choice: ...
+```
+
+- **mission**: why you study this, from `slp-init`
+- **glossary**: terms you can already use
+- **record**: numbered entries: confirmed floor, corrected misconceptions, source choices
+
+# notes/
+
+Summaries, lessons and your own notes, numbered. The app's editor splits a file by `#`, and renders Mermaid and LaTeX.
+
+```example
+notes/
+├── 01-methods-and-status-codes.md
+├── 02-caching.md
+└── 03-idempotency.md
+```
+
+- **written by**: you, [slp-summarize](slp-summarize.md), [slp-teach](slp-teach.md)
+- **format**: one `#` per file, topics `##`, subtopics `###`
+
+# exams/
+
+One folder per exam, named by unit (`ch-01`, `domain-02`). Attempts are named by the minute they were made and point at questions by position.
+
+```tree
+exams/ch-01/
+├── exam.json
+└── attempts/
+    ├── 2026-09-24T1030.json    # your answers
+    ├── 2026-09-24T1030-p3.webm # oral answer
+    └── 2026-09-24T1030.md      # feedback
+```
+
+- **written by**: [slp-exam](slp-exam.md), the app, [slp-grade](slp-grade.md)
+- **pending**: an attempt without its `.md` feedback
+
+# exercises/
+
+Applied work. A `prompt.md` from [slp-exercises](slp-exercises.md) and your submissions in `attempts/`, any extension.
+
+```tree
+exercises/adr-topic-vs-queue/
+├── prompt.md
+└── attempts/
+    ├── 2026-09-24T1030.py  # your artifact
+    └── 2026-09-24T1030.md  # feedback
+```
+
+// if the artifact itself is .md, it is pending while it's the only file with that date
+
+# progress/
+
+Where you are and what happened. Written by the skill that produced the event, never by `slp-session`.
+
+```status.md
+# Status — HTTP basics
+**Updated:** 2026-09-22
+- **Current unit:** ch-02
+- **Summary written:** yes
+- **Next exam:** ch-02
+```
+
+```log.md
+## Exams
+| Date | Exam | MC | Rubric | Attempt |
+```
+
+- **status.md**: the present: current unit, summary written, next exam. Rewritten, not accumulated
+- **log.md**: session history, one row per event. Old rows are never deleted
+- **dates**: always `YYYY-MM-DD`, never relative
+
+# agent/
+
+The single source of the agent layer. Skills use the Agent Skills format: `name` + `description` frontmatter, instructions below. Agents without skill support read the matching `SKILL.md` by hand, as `AGENTS.md` explains.
+
+```tree
+agent/
+├── skills/
+│   ├── slp-session/SKILL.md
+│   ├── slp-teach/SKILL.md
+│   └── ...
+└── agents/
+    ├── researcher.md
+    └── teacher-<slug>.md  # ignored
+```
+
+| in a skill | means |
+| --- | --- |
+| `AskUserQuestion` | ask with options, or a numbered question |
+| `Agent` | delegate to `agent/agents/X.md`, or follow it yourself |
+| `WebSearch` | search the web, as `sources_mode` allows |
+
+# Contributing
+
+Contributions are welcome. Skills are edited in `agent/skills/`, never inside an agent's own folder.
+
+```shell
+git checkout -b my-change
+# edit agent/skills/...
+git push origin my-change
+```
+
+For bugs or ideas, [open an issue](https://github.com/GustavoPenaBeltrami/self-learning-platform/issues/new). Licensed [MIT](https://github.com/GustavoPenaBeltrami/self-learning-platform/blob/main/LICENSE).
+
+Thanks to [amosblomqvist/learn](https://github.com/amosblomqvist/learn) for the method behind slp-teach and to [Matt Pocock](https://github.com/mattpocock) for per-topic memory and spaced review.

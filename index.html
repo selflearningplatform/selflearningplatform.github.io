@@ -17,6 +17,7 @@
     --kanji: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
   }
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html { scroll-padding-top: 72px; }
   body { margin: 0; background: var(--void); color: var(--paper); font: 400 14px/1.71 "JetBrains Mono", ui-monospace, monospace; -webkit-font-smoothing: antialiased; }
   a { color: var(--paper); text-underline-offset: 3px; }
@@ -34,12 +35,11 @@
   .nav nav a { color: var(--fog); text-decoration: none; }
   .nav nav a:hover, .nav nav a[aria-current] { color: var(--paper); }
 
-  .cover { min-height: calc(92vh - 56px); display: grid; grid-template-rows: auto 1fr auto; gap: 40px; padding: 32px 0 40px; }
+  .cover { min-height: calc(92vh - 56px); display: grid; grid-template-rows: auto 1fr auto; gap: 40px; padding: 32px 0 20px; }
   .cover-top { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--fog); }
   .cover-hero { display: grid; place-items: center; align-content: center; gap: 40px; }
   .cover-hero img { width: 100%; max-width: 980px; }
-  .meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; border-top: 1px solid var(--iron); padding-top: 20px; font-size: 13px; }
-  .meta div div:first-child { color: var(--steel); }
+  .meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); border-top: 1px solid var(--iron); padding-top: 20px; font-size: 13px; }
 
   .btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
   .btn { display: inline-block; padding: 10px 18px; border: 1px solid var(--slate); color: var(--paper); text-decoration: none; font-size: 13px; }
@@ -50,7 +50,7 @@
   section { padding: 96px 0; border-top: 1px solid var(--iron); }
   [data-page] > section:first-child { border-top: 0; }
   .label { font-size: 12px; color: var(--steel); margin-bottom: 16px; }
-  .intro { max-width: 620px; margin: 0 0 48px; color: var(--chalk); text-wrap: pretty; }
+  .intro { margin: 0 0 48px; color: var(--chalk); text-wrap: pretty; }
   .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px 64px; align-items: start; }
   .prose { display: grid; gap: 16px; max-width: 560px; color: var(--chalk); text-wrap: pretty; }
   .prose h2 { color: var(--paper); }
@@ -61,7 +61,7 @@
   .gloss { display: flex; gap: 32px; align-items: flex-end; flex-wrap: wrap; }
   .gloss div { display: grid; gap: 8px; justify-items: center; }
   .gloss b { font: 900 128px/1 var(--kanji); }
-  .gloss span { font-size: 13px; color: var(--fog); }
+  .gloss span { font-size: 13px; color: var(--fog); margin-top:15px}
 
   .cells { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: var(--iron); border: 1px solid var(--iron); }
   .cells > div { background: var(--void); padding: 28px 24px 32px; display: grid; gap: 14px; align-content: start; }
@@ -92,14 +92,19 @@
   .logos .light img { filter: invert(1); }
   figcaption { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 13px; }
   figcaption span:last-child { color: var(--fog); }
-  .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 48px; margin-top: 72px; }
-  .rules-grid > div { display: grid; gap: 16px; align-content: start; }
+  .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 72px; }
+  .rules-grid > div { display: grid; gap: 16px; grid-row: span 3; grid-template-rows: subgrid; }
   .rules-grid strong { font-size: 15px; }
+  .rules-grid ul { align-self: start; }
   .rules-grid p { color: var(--chalk); font-size: 13px; }
   .box { border: 1px solid var(--iron); padding: 32px; }
   .clear { display: grid; place-items: center; }
   .clear div { padding: 28px; outline: 1px dashed var(--steel); }
-  .sizes { display: flex; align-items: flex-end; gap: 32px; flex-wrap: wrap; }
+  .sizes { display: flex; align-items: flex-end; align-content: center; justify-content: space-evenly; gap: 32px; flex-wrap: wrap; }
+  .rules-grid .wide { grid-column: span 2; }
+  .rules-grid .full { grid-column: 1 / -1; margin-top: 24px; }
+  @media (max-width: 760px) { .rules-grid .wide { grid-column: auto; } }
+  .rules-grid .full ul { display: flex; flex-wrap: wrap; gap: 8px 32px; }
   .sizes div { display: grid; gap: 8px; font-size: 12px; color: var(--fog); }
 
   .inks { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 16px; }
@@ -125,6 +130,54 @@
   footer { border-top: 1px solid var(--iron); padding: 32px 0 48px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--fog); }
   footer a { color: var(--fog); }
 
+  .docs { display: grid; grid-template-columns: 248px minmax(0, 1fr); gap: 48px; }
+  .side { position: sticky; top: 56px; align-self: start; max-height: calc(100vh - 56px); overflow-y: auto; padding: 24px 16px 48px 0; border-right: 1px solid var(--iron); }
+  .filter { width: 100%; margin-bottom: 20px; padding: 8px 10px; background: var(--void); border: 1px solid var(--slate); color: var(--paper); font: inherit; font-size: 13px; }
+  .filter:focus { outline: none; border-color: var(--fog); }
+  .side details { margin-bottom: 16px; }
+  .side summary { cursor: pointer; padding: 6px 8px; font-size: 12px; color: var(--steel); text-transform: uppercase; letter-spacing: .06em; list-style: none; display: flex; justify-content: space-between; }
+  .side summary::after { content: "›"; transition: transform .12s; }
+  .side details[open] summary::after { transform: rotate(90deg); }
+  .side a { display: flex; align-items: center; gap: 10px; padding: 6px 8px; font-size: 13px; color: var(--fog); text-decoration: none; }
+  .side a:hover { color: var(--paper); background: var(--graphite); }
+  .side a[aria-current] { color: var(--paper); background: var(--iron); }
+  .tag { font-style: normal; font-size: 10px; line-height: 1; padding: 4px 6px; min-width: 40px; text-align: center; background: var(--slate); color: var(--paper); text-transform: uppercase; letter-spacing: .04em; }
+  .side a[aria-current] .tag, .endpoint .tag { background: var(--paper); color: var(--void); font-weight: 700; }
+  .doc-area { padding: 40px 0 72px; min-width: 0; }
+  .doc-area h1 { margin: 0 0 16px; font-size: 28px; line-height: 1.25; }
+  .doc-area h2, .doc-area h3 { margin: 16px 0 0; font-size: 15px; color: var(--paper); }
+  .doc-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
+  .doc-head div { display: flex; align-items: baseline; gap: 12px; font-size: 12px; }
+  .doc-head a { color: var(--fog); }
+  .endpoint { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-bottom: 28px; margin-bottom: 32px; border-bottom: 1px solid var(--iron); }
+  .endpoint .tag { font-size: 11px; padding: 6px 8px; }
+  .endpoint code { color: var(--paper); font-size: 15px; overflow-wrap: anywhere; }
+  .copy { background: none; border: 1px solid var(--slate); color: var(--fog); font: inherit; cursor: pointer; padding: 2px 8px; }
+  .copy:hover, .copy-page:hover { color: var(--paper); border-color: var(--fog); }
+  .copy-page { background: none; border: 1px solid var(--slate); color: var(--fog); font: inherit; cursor: pointer; padding: 2px 10px; }
+  .doc-main { max-width: 820px; display: grid; gap: 16px; color: var(--chalk); text-wrap: pretty; }
+  .doc-main .note { margin: 0; }
+  .doc-main table { border: 1px solid var(--iron); border-collapse: collapse; font-size: 13px; }
+  .doc-main th, .doc-main td { padding: 12px 16px; border-bottom: 1px solid var(--graphite); text-align: left; vertical-align: baseline; color: var(--chalk); overflow-wrap: anywhere; }
+  .doc-main th { padding: 10px 16px; font-size: 12px; font-weight: 400; color: var(--steel); }
+  .doc-main td:first-child { width: 36%; }
+  .panel { border: 1px solid var(--iron); background: #0a0a0a; }
+  .panel-h { padding: 10px 16px; border-bottom: 1px solid var(--iron); font-size: 12px; color: var(--steel); display: flex; justify-content: space-between; }
+  .doc-main > * { min-width: 0; }
+  .panel pre { border: 0; background: none; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 20px; margin: 0; font-size: 13px; }
+  .kv dt { color: var(--paper); font-weight: 700; }
+  .kv dd { margin: 0; }
+  .doc-main ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 13px; }
+  .next { display: block; margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--iron); text-align: right; text-decoration: none; font-size: 16px; }
+  .next:empty { display: none; }
+  @media (max-width: 760px) {
+    .docs { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .side { position: static; max-height: none; border-right: 0; border-bottom: 1px solid var(--iron); padding-right: 0; }
+    .kv { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+    .kv dd { margin-bottom: 8px; }
+  }
+
   @media (max-width: 600px) {
     .nav nav { gap: 16px; }
     section { padding: 64px 0; }
@@ -144,7 +197,7 @@
     <nav>
       <a href="#home">home</a>
       <a href="#docs">docs</a>
-      <a href="#design">design</a>
+      <a href="#identity">identity</a>
       <a href="https://github.com/GustavoPenaBeltrami/self-learning-platform">github ↗</a>
     </nav>
   </div>
@@ -153,7 +206,7 @@
 <main class="wrap">
   <div data-page="home">
     <header class="cover">
-      <div class="cover-top"><span>SLP: self learning platform</span><span>open source · MIT</span></div>
+      <div class="cover-top"><span>Set yout learning path</span><span>open source · MIT</span></div>
       <div class="cover-hero">
         <img src="app/assets/lockup-horizontal.png" alt="独学 Self Learning Platform">
         <div class="btns">
@@ -162,9 +215,9 @@
         </div>
       </div>
       <div class="meta">
-        <div><div>name</div><div>SLP · Self Learning Platform</div></div>
-        <div><div>mark</div><div>独学 · dokugaku</div></div>
-        <div><div>what it is</div><div>An agent-powered hub for self-learners</div></div>
+        <div><div></div><div>SLP · Self Learning Platform</div></div>
+        <div><div></div><div>独学 · dokugaku</div></div>
+        <div><div></div><div>An agent-powered hub for self-learners</div></div>
       </div>
     </header>
 
@@ -188,23 +241,23 @@
       <div class="cols">
         <div class="prose">
           <h2>The method comes built in.</h2>
-          <p>Reading isn't enough: you need someone to explain, quiz you, grade you and make you review right before you forget. SLP takes care of all of that.</p>
+          <p>The knowledge is nothing if you cannot externalize in your own way. You need a method where you have an input and an output channel with the appropiate feedback.</p>
         </div>
         <div class="prose">
           <h2>Everything stays on your disk.</h2>
-          <p>Notes in Markdown, exams in JSON, attempts and progress next to them. No database, no account. It reads fine on GitHub, in Obsidian or in any editor.</p>
+          <p>No need for internet connection, no need to share your private learning session. You are the owner, as it should be.</p>
         </div>
       </div>
     </section>
 
     <section>
-      <div class="label">03 / the loop</div>
-      <p class="intro">Prepare, practice, get feedback, review. Each step is a command in your agent, and whatever it produces shows up in the app on its own.</p>
+      <div class="label">03 / the learning loop</div>
+      <p class="intro">The study loop consists of acquiring knowledge from any source, internalizing it with logic, being able to express it, and obtaining feedback.</p>
       <div class="cells">
-        <div><div class="t"><strong>prepare</strong><span>teach · summarize</span></div><p>The agent teaches until it's understood, not memorized, and turns your material into notes.</p><div class="rule">/slp-teach · /slp-summarize</div></div>
-        <div><div class="t"><strong>practice</strong><span>exams · exercises</span></div><p>Exams you sit in the local app, and applied exercises: code, an ADR, a critique.</p><div class="rule">/slp-exam · /slp-exercises</div></div>
-        <div><div class="t"><strong>feedback</strong><span>grade</span></div><p>Every attempt is graded against a rubric, with what you got wrong written down.</p><div class="rule">/slp-grade</div></div>
-        <div><div class="t"><strong>review</strong><span>spaced · interleaved</span></div><p>Leitner review across topics so it doesn't fade.</p><div class="rule">/slp-review · /slp-session</div></div>
+        <div><div class="t"><strong>prepare</strong></div><p>The agent teaches until it's understood, not memorized, and turns your material into notes.</p><div class="rule">/slp-teach · /slp-summarize</div></div>
+        <div><div class="t"><strong>practice</strong></div><p>Exams you sit in the local app, and applied exercises: code, an ADR, a critique.</p><div class="rule">/slp-exam · /slp-exercises</div></div>
+        <div><div class="t"><strong>feedback</strong></div><p>Every attempt is graded against a rubric, with what you got wrong written down.</p><div class="rule">/slp-grade</div></div>
+        <div><div class="t"><strong>review</strong></div><p>Leitner review across topics so it doesn't fade.</p><div class="rule">/slp-review · /slp-session</div></div>
       </div>
     </section>
 
@@ -216,114 +269,66 @@
           <p>The skills use the <code>SKILL.md</code> format and <code>AGENTS.md</code> explains the project to any of them, with a cloud model or a local one via Ollama.</p>
         </div>
         <ul class="dash">
-          <li>- Claude Code</li><li>- Codex</li><li>- Gemini CLI</li><li>- Antigravity</li><li>- Cline</li><li>- Cursor</li><li>- opencode + Ollama</li>
+          <li>- Claude Code</li><li>- Codex</li><li>- Cursor</li><li>- opencode + Ollama</li><li>- Any llm</li>
         </ul>
       </div>
     </section>
   </div>
 
-  <div data-page="docs" hidden>
-    <section id="install">
-      <div class="label">01 / install</div>
-      <p class="intro"><a href="https://docs.astral.sh/uv/">uv</a> is the only thing you need to install, plus a coding agent with permission in the repo folder.</p>
-      <div class="steps">
-        <div class="step"><span>1 · install uv</span><pre><span class="c"># macOS and Linux</span>
-curl -LsSf https://astral.sh/uv/install.sh | sh
-<span class="c"># Windows</span>
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</pre></div>
-        <div class="step"><span>2 · clone</span><pre>git clone https://github.com/GustavoPenaBeltrami/self-learning-platform.git
-cd self-learning-platform</pre></div>
-        <div class="step"><span>3 · open your agent in the folder and prompt</span><pre>Read AGENTS.md and run slp-setup.</pre></div>
-        <div class="step"><span>4 · start the app</span><pre>uv run slp</pre></div>
-      </div>
-      <p class="note">// slp-setup exposes the skills in your agent's format and writes only to .git/info/exclude. the first run needs internet; after that it works offline</p>
-    </section>
+  <div data-page="docs" class="docs" hidden>
+    <aside class="side">
+      <input class="filter" type="search" placeholder="filter" aria-label="filter docs">
+      <nav class="side-nav">
+        <details open><summary>introduction</summary>
+          <a href="#docs/overview">overview</a>
+          <a href="#docs/getting-started">getting started</a>
+          <a href="#docs/install">installation</a>
+          <a href="#docs/setup">setup</a>
+          <a href="#docs/init">init</a>
+          <a href="#docs/cli">uv run slp</a>
+          <a href="#docs/windows">three windows</a>
+          <a href="#docs/language">language</a>
+          <a href="#docs/dictation">dictation</a>
+          <a href="#docs/profiles">profiles</a>
+        </details>
+        <details open><summary>skills</summary>
+          <a href="#docs/slp-session"><i class="tag">plan</i>slp-session</a>
+          <a href="#docs/slp-setup"><i class="tag">setup</i>slp-setup</a>
+          <a href="#docs/slp-init"><i class="tag">setup</i>slp-init</a>
+          <a href="#docs/slp-summarize"><i class="tag">prep</i>slp-summarize</a>
+          <a href="#docs/slp-teach"><i class="tag">prep</i>slp-teach</a>
+          <a href="#docs/slp-exercises"><i class="tag">prac</i>slp-exercises</a>
+          <a href="#docs/slp-exam"><i class="tag">prac</i>slp-exam</a>
+          <a href="#docs/slp-grade"><i class="tag">feed</i>slp-grade</a>
+          <a href="#docs/slp-review"><i class="tag">rev</i>slp-review</a>
+        </details>
+        <details open><summary>agents</summary>
+          <a href="#docs/researcher"><i class="tag">agent</i>researcher</a>
+          <a href="#docs/teacher"><i class="tag">agent</i>teacher-&lt;slug&gt;</a>
+        </details>
+        <details open><summary>folders</summary>
+          <a href="#docs/topics"><i class="tag">dir</i>topics/&lt;slug&gt;</a>
+          <a href="#docs/topic-json"><i class="tag">file</i>topic.json</a>
+          <a href="#docs/learning-md"><i class="tag">file</i>learning.md</a>
+          <a href="#docs/notes"><i class="tag">dir</i>notes/</a>
+          <a href="#docs/exams"><i class="tag">dir</i>exams/</a>
+          <a href="#docs/exercises"><i class="tag">dir</i>exercises/</a>
+          <a href="#docs/progress"><i class="tag">dir</i>progress/</a>
+          <a href="#docs/agent-dir"><i class="tag">dir</i>agent/</a>
+        </details>
+        <details open><summary>project</summary>
+          <a href="#docs/contributing">contributing</a>
+        </details>
+      </nav>
+    </aside>
 
-    <section id="topic">
-      <div class="label">02 / first topic</div>
-      <div class="cols">
-        <div class="prose">
-          <h2>Run <code>/slp-init</code>.</h2>
-          <p>The agent asks what it needs and creates the topic. Everything about it lives in one folder, as Markdown and JSON.</p>
-          <p class="muted"><code>topics/example/</code> is a small one to look at. Your own topics are git-ignored.</p>
-        </div>
-        <pre>topics/&lt;slug&gt;/
-├── topic.json      <span class="c"># goals, languages, sources</span>
-├── learning.md     <span class="c"># what you know, what you got wrong</span>
-├── resources/      <span class="c"># PDFs, slides, transcripts</span>
-├── notes/          <span class="c"># summaries and lessons</span>
-├── exams/          <span class="c"># exam.json + attempts</span>
-├── exercises/
-└── progress/       <span class="c"># status.md, log.md</span></pre>
-      </div>
-    </section>
-
-    <section id="commands">
-      <div class="label">03 / commands</div>
-      <div class="rows">
-        <div class="head"><span>command</span><span>what it does</span></div>
-        <div><code>/slp-init</code><span>interviews you, creates the topic, checks your level</span></div>
-        <div><code>/slp-session</code><span>what's pending today across every topic, and what to do</span></div>
-        <div><code>/slp-summarize</code><span>summarizes material into the topic's notes</span></div>
-        <div><code>/slp-teach</code><span>teaches until it's understood, not memorized</span></div>
-        <div><code>/slp-exercises</code><span>an applied exercise: code, an ADR, a critique</span></div>
-        <div><code>/slp-exam</code><span>builds an exam you sit in the app</span></div>
-        <div><code>/slp-grade</code><span>grades the attempt against a rubric</span></div>
-        <div><code>/slp-review</code><span>spaced, interleaved Leitner review</span></div>
-      </div>
-    </section>
-
-    <section id="windows">
-      <div class="label">04 / three windows</div>
-      <p class="intro">Side by side. Two monitors help.</p>
-      <div class="cells">
-        <div><div class="t"><strong>1 · material</strong></div><p>The PDF, the course, the docs. Whatever you're studying.</p></div>
-        <div><div class="t"><strong>2 · app</strong></div><p><code>uv run slp</code> in the browser: notes, exams, progress.</p></div>
-        <div><div class="t"><strong>3 · agent</strong></div><p>Open at the repo root. Teaches, builds exams, grades.</p></div>
-      </div>
-    </section>
-
-    <section id="language">
-      <div class="label">05 / language</div>
-      <div class="rows">
-        <div class="head"><span>topic.json → language</span><span>sets the default for</span></div>
-        <div><code>source</code><span>the language of the material</span></div>
-        <div><code>notes</code><span>notes, summaries and lessons</span></div>
-        <div><code>exams</code><span>exams, exercises and feedback</span></div>
-      </div>
-      <p class="note">// ask for another language in any single request without touching the file. the agent chats in whatever language you write in</p>
-    </section>
-
-    <section id="dictation">
-      <div class="label">06 / dictation · optional</div>
-      <p class="intro">Dictate notes or answer oral exam questions out loud. It runs locally with Whisper; without it, the mic falls back to your OS dictation.</p>
-      <div class="rows">
-        <div class="head"><span>system</span><span>engine · disk</span></div>
-        <div><span>macOS Apple Silicon</span><span>mlx-whisper (GPU) · ~2.7 GB</span></div>
-        <div><span>macOS Intel, Linux, Windows x64</span><span>faster-whisper (CPU) · ~0.7 GB</span></div>
-        <div><span>Windows ARM</span><span>faster-whisper, emulated x64 · ~0.7 GB</span></div>
-      </div>
-      <p class="note">// uv run slp setup downloads the model ahead of time. small by default on CPU, turbo is more accurate; change it in /settings</p>
-    </section>
-
-    <section id="offline">
-      <div class="label">07 / online or offline</div>
-      <div class="cols">
-        <div class="prose"><h2>Online</h2><p>A paid agent. Recommended.</p></div>
-        <div class="prose"><h2>Offline</h2><p>opencode + Ollama + <code>qwen3-coder:30b</code>, or <code>gpt-oss:20b</code> on 16 GB of RAM.</p></div>
-      </div>
-    </section>
-
-    <section id="contributing">
-      <div class="label">08 / contributing</div>
-      <div class="prose">
-        <p>Fork the repo, create your branch, and open a pull request. Skills are edited in <code>agent/skills/</code>, never inside an agent's own folder.</p>
-        <p>For bugs or ideas, <a href="https://github.com/GustavoPenaBeltrami/self-learning-platform/issues/new">open an issue</a>. Licensed <a href="https://github.com/GustavoPenaBeltrami/self-learning-platform/blob/main/LICENSE">MIT</a>.</p>
-      </div>
-    </section>
+    <div class="doc-area">
+      <article id="doc"></article>
+      <a class="next" href="#docs"></a>
+    </div>
   </div>
 
-  <div data-page="design" hidden>
+  <div data-page="identity" hidden>
     <section id="principles">
       <div class="label">01 / principles</div>
       <p class="intro">Four Japanese design ideas describe what SLP already does. They are a vocabulary for decisions, not a visual theme.</p>
@@ -349,7 +354,7 @@ cd self-learning-platform</pre></div>
           <div class="box clear"><div><img src="app/assets/mark.png" alt="" style="width:112px"></div></div>
           <p>Keep empty space of at least ¼ of the mark's height on every side. This is ma: the space belongs to the logo.</p>
         </div>
-        <div>
+        <div class="wide">
           <strong>Minimum size</strong>
           <div class="box sizes">
             <div><img src="app/assets/mark.png" alt="" style="width:16px">mark 16px</div>
@@ -358,7 +363,7 @@ cd self-learning-platform</pre></div>
           </div>
           <p>Below these widths the Latin line stops reading. Use the 独 mark alone.</p>
         </div>
-        <div>
+        <div class="full">
           <strong>Don't</strong>
           <ul class="dash">
             <li>✕ add color</li><li>✕ stretch or rotate</li><li>✕ add shadow or glow</li><li>✕ crop or crowd</li><li>✕ retype the lettering</li>
@@ -428,13 +433,16 @@ cd self-learning-platform</pre></div>
   <footer><span>独学 · SLP Self Learning Platform</span><span><a href="https://github.com/GustavoPenaBeltrami/self-learning-platform/blob/main/LICENSE">MIT</a> · ~ EOF</span></footer>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/marked@16/lib/marked.umd.js"></script>
 <script>
-  const PAGES = ['home', 'docs', 'design'];
+  const PAGES = ['home', 'docs', 'identity'];
   const RAMP = [['void', '#0c0c0c'], ['carbon', '#141414'], ['graphite', '#1b1b1b'], ['iron', '#262626'], ['slate', '#383838'], ['pewter', '#4e4e4e'],
     ['steel', '#676767'], ['ash', '#828282'], ['fog', '#a3a3a3'], ['chalk', '#cacaca'], ['paper', '#e6e6e6']];
 
   document.getElementById('ramp').innerHTML = RAMP.map(([name, hex]) =>
     `<div><i style="background:${hex}"></i><span>${name}<small>${hex}</small></span></div>`).join('');
+
+  const docLinks = [...document.querySelectorAll('.side-nav a')];
 
   function route() {
     const [hash, id] = location.hash.slice(1).split('/');
@@ -443,9 +451,85 @@ cd self-learning-platform</pre></div>
     document.querySelectorAll('.nav nav a').forEach(a =>
       a.getAttribute('href') === '#' + page ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
     document.title = page === 'home' ? '独学 · SLP Self Learning Platform' : `独学 · ${page}`;
+    if (page === 'docs') return showDoc(id);
     const target = id && document.getElementById(id);
     target ? target.scrollIntoView() : scrollTo(0, 0);
   }
+
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  marked.use({ renderer: {
+    code: ({ text, lang }) => `<div class="panel"><div class="panel-h">${esc(lang || '')}</div><pre>${
+      esc(text).replace(/( {2,})(# .*)$/gm, '$1<span class="c">$2</span>')}</pre></div>`
+  } });
+
+  const docIds = docLinks.map(a => a.getAttribute('href').slice('#docs/'.length));
+  const cache = {};
+  const loadDoc = id => cache[id] ??= fetch(`docs/${id}.md`)
+    .then(r => r.ok ? r.text() : Promise.reject(r.status))
+    .catch(e => { delete cache[id]; throw e; });
+  let currentDoc;
+
+  async function showDoc(id) {
+    if (!docIds.includes(id)) id = docIds[0];
+    currentDoc = id;
+    const i = docIds.indexOf(id);
+    docLinks.forEach((a, j) => j === i ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+    const next = docLinks[i + 1], nextEl = document.querySelector('.next');
+    nextEl.href = next ? next.getAttribute('href') : '#docs';
+    nextEl.textContent = next ? next.lastChild.textContent + ' →' : '';
+    const doc = document.getElementById('doc');
+    let md;
+    try { md = await loadDoc(id); } catch { md = null; }
+    if (currentDoc !== id) return;
+    if (!md) return doc.innerHTML = `<p class="muted">could not load <a href="docs/${id}.md">docs/${id}.md</a></p>`;
+
+    const [, front, body] = md.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+    const meta = Object.fromEntries(front.split('\n').map(l => [l.slice(0, l.indexOf(':')), l.slice(l.indexOf(':') + 1).trim()]));
+    const title = body.match(/^# (.+)$/m)[1];
+    doc.innerHTML = `<div class="doc-head"><h1>${esc(title)}</h1><div><button class="copy-page">copy page</button><a href="docs/${id}.md">.md</a></div></div>
+      <div class="endpoint"><i class="tag">${esc(meta.tag)}</i><code>${esc(meta.endpoint)}</code>${meta.copy ? '<button class="copy" aria-label="copy">⧉</button>' : ''}</div>
+      <div class="doc-main">${marked.parse(body.replace(/^# .+\n/m, ''))}</div>`;
+
+    doc.querySelectorAll('.doc-main a[href$=".md"]:not([href*=":"])').forEach(a => a.href = '#docs/' + a.getAttribute('href').slice(0, -3));
+    doc.querySelectorAll('.doc-main p').forEach(p => p.textContent.startsWith('//') && p.classList.add('note'));
+    doc.querySelectorAll('.doc-main ul').forEach(ul => {
+      const items = [...ul.children];
+      if (!items.every(li => li.firstChild?.nodeName === 'STRONG')) return;
+      const dl = document.createElement('dl');
+      dl.className = 'kv';
+      dl.innerHTML = items.map(li => {
+        const dt = li.firstChild.innerHTML;
+        li.firstChild.remove();
+        return `<dt>${dt}</dt><dd>${li.innerHTML.replace(/^:\s*/, '')}</dd>`;
+      }).join('');
+      ul.replaceWith(dl);
+    });
+    document.title = `独学 · ${title}`;
+    scrollTo(0, 0);
+  }
+
+  document.querySelector('.filter').addEventListener('input', e => {
+    const q = e.target.value.trim().toLowerCase();
+    docLinks.forEach(a => a.hidden = !a.textContent.toLowerCase().includes(q));
+    document.querySelectorAll('.side details').forEach(d => {
+      d.hidden = !d.querySelector('a:not([hidden])');
+      if (q) d.open = true;
+    });
+  });
+
+  document.addEventListener('click', async e => {
+    const page = e.target.closest('.copy-page');
+    if (page) {
+      navigator.clipboard.writeText(await loadDoc(currentDoc));
+      page.textContent = 'copied ✓';
+      return setTimeout(() => page.textContent = 'copy page', 1200);
+    }
+    const b = e.target.closest('.copy');
+    if (!b) return;
+    navigator.clipboard.writeText(b.previousElementSibling.textContent);
+    b.textContent = '✓';
+    setTimeout(() => b.textContent = '⧉', 1200);
+  });
 
   addEventListener('hashchange', route);
   route();
