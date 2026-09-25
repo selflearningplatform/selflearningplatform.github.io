@@ -4,7 +4,7 @@ endpoint: uv run slp
 copy: true
 ---
 
-# Run the app
+# Deploy
 
 Starts the local server and opens the notebook in your browser. If a server is already running, it just opens the page.
 

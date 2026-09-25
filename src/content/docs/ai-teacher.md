@@ -9,7 +9,7 @@ Studying alone fails at the same point: nobody tells you what you got wrong. The
 
 It never replaces the work. You read, you answer, you produce. It gives feedback.
 
-## Three terms
+## Key terms
 
 - **LLM**: a language model. Reads text, writes text. Claude, GPT, Gemini, or a local one via Ollama
 - **agent**: an LLM that can use tools: read and write files, search the web, run commands. Claude Code, Codex, Gemini CLI, opencode. You talk to it in the third window

@@ -22,7 +22,7 @@ export const NAV = [
     ['profiles', 'profiles'],
   ]],
   ['visual interface', [
-    ['cli', 'uv run slp'],
+    ['deploy', 'deploy'],
     ['editor', 'notes', 'view'],
     ['exam-app', 'exams', 'view'],
     ['settings', 'settings', 'view'],

@@ -14,6 +14,8 @@ const { id, body, data } = entry;
 const title = titleOf(body);
 const blurb = body.match(/^# .+\n\n(.+)$/m)[1].replace(/[`*[\]]|\(.*?\)/g, '');
 const next = DOCS[DOCS.findIndex(d => d.id === id) + 1];
+const skill = id.startsWith('slp-') && `https://raw.githubusercontent.com/GustavoPenaBeltrami/self-learning-platform/main/agent/skills/${id}/SKILL.md`;
+const site = Astro.site.origin;
 ---
 <Base title={title} description={blurb}>
   <div data-page="docs" class="docs">
@@ -32,11 +34,20 @@ const next = DOCS[DOCS.findIndex(d => d.id === id) + 1];
 
     <div class="doc-area">
       <article>
-        <div class="doc-head"><h1>{title}</h1><div><button class="copy-page" data-src={`/docs/${id}.md`}>copy page</button><a href={`/docs/${id}.md`}>.md</a></div></div>
+        <div class="doc-head"><h1>{title}</h1><div><button class="copy-page" data-src={`/docs/${id}.md`}>copy page</button><a href={`/docs/${id}.md`}>.md</a>{skill && <a class="skill-md" href={skill} download="SKILL.md">SKILL.md ↓</a>}</div></div>
         <div class="endpoint"><i class="tag">{data.tag}</i><code>{data.endpoint}</code>{data.copy && <button class="copy" aria-label="copy">⧉</button>}</div>
         <div class="doc-main" set:html={render(body)} />
       </article>
       {next && <a class="next" href={`/docs/${next.id}`}>{next.label} →</a>}
+      <section class="formats">
+        <h2>Markdown formats</h2>
+        <p>The documentation is also available in <a href="https://llmstxt.org/">llms.txt</a> formats:</p>
+        <ul>
+          <li><a href="/llms.txt">llms.txt</a> lists every documentation page.</li>
+          <li><a href="/llms-full.txt">llms-full.txt</a> contains the complete documentation in one file and may exceed some context windows.</li>
+        </ul>
+        <p>Append <code>.md</code> to any documentation URL to retrieve that page as Markdown. For example, this page is available at <a href={`/docs/${id}.md`}><code>{site}/docs/{id}.md</code></a>. You can also copy the current page as Markdown by pressing <kbd>Cmd+C</kbd> or <kbd>Ctrl+C</kbd>.</p>
+      </section>
     </div>
   </div>
 </Base>
@@ -57,11 +68,22 @@ const next = DOCS[DOCS.findIndex(d => d.id === id) + 1];
     b.textContent = text;
     setTimeout(() => b.textContent = was, 1200);
   };
+  const copyPage = async page => {
+    await navigator.clipboard.writeText(await fetch(page.dataset.src).then(r => r.text()));
+    flash(page, 'copied ✓');
+  };
+  document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'c' && !getSelection().toString() && !e.target.closest('input, textarea')) copyPage(document.querySelector('.copy-page'));
+  });
   document.addEventListener('click', async e => {
     const page = e.target.closest('.copy-page');
-    if (page) {
-      await navigator.clipboard.writeText(await fetch(page.dataset.src).then(r => r.text()));
-      return flash(page, 'copied ✓');
+    if (page) return copyPage(page);
+    const md = e.target.closest('.skill-md');
+    if (md) {
+      e.preventDefault();
+      const url = URL.createObjectURL(await fetch(md.href).then(r => r.blob()));
+      Object.assign(document.createElement('a'), { href: url, download: 'SKILL.md' }).click();
+      return URL.revokeObjectURL(url);
     }
     const b = e.target.closest('.copy');
     if (!b) return;
