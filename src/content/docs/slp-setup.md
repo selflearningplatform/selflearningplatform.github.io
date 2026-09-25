@@ -9,7 +9,7 @@ copy: true
 Exposes `agent/skills` and `agent/agents` in the running agent's native format, without touching anything versioned.
 
 ```usage
-Read AGENTS.md and run slp-setup.
+Read AGENTS.md, then read agent/skills/slp-setup/SKILL.md and follow it.
 ```
 
 ```opencode.json · offline
@@ -24,7 +24,8 @@ Read AGENTS.md and run slp-setup.
 }
 ```
 
-- **triggers**: first time with a new agent, "set up the project", "install the skills"
+- **manual only**: `disable-model-invocation: true`. On the first run the skills aren't loaded yet, so point the agent at the file; later, `/slp-setup` works
+- **when**: first time with a new agent, or after editing `agent/` if your agent uses conversion
 - **reads**: `profile` in `settings.json`, the agent's current docs
 - **writes**: symlinks or converted files, plus `.git/info/exclude`
 

@@ -16,5 +16,8 @@ description: ...
 ## What you don't do
 ```
 
-- **used by**: [slp-teach](slp-teach.md) when the topic has one
+- **used by**: [slp-teach](slp-teach.md) and [slp-session](slp-session.md), which hand the lesson to it when the topic has one
+- **memory**: none of its own. It reads the topic's `learning.md`
+- **rules**: never gives the answer before you try; verifies doubtful facts with the [researcher](researcher.md)
+- **missing one**: `slp-session` lists topics without a teacher and offers to create it
 - **git**: personal and ignored

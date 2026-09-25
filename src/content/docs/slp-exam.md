@@ -39,3 +39,5 @@ Builds a JSON exam from content you paste, audited first against the topic's pro
 | `open` | `rubric`: 3–5 checkable points |
 | `oral` | like open, answered by voice |
 | `practical` | `rubric` |
+
+All fields, and the attempt format: [exams/](exams.md).
