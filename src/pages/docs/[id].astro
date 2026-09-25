@@ -39,6 +39,7 @@ const site = Astro.site.origin;
         <div class="doc-main" set:html={render(body)} />
       </article>
       {next && <a class="next" href={`/docs/${next.id}`}>{next.label} →</a>}
+      <div class="toast" role="status" hidden>独学 · copied <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg></div>
       <section class="formats">
         <h2>Markdown formats</h2>
         <p>The documentation is also available in <a href="https://llmstxt.org/">llms.txt</a> formats:</p>
@@ -70,7 +71,10 @@ const site = Astro.site.origin;
   };
   const copyPage = async page => {
     await navigator.clipboard.writeText(await fetch(page.dataset.src).then(r => r.text()));
-    flash(page, 'copied ✓');
+    const toast = document.querySelector('.toast');
+    toast.hidden = false;
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => toast.hidden = true, 1600);
   };
   document.addEventListener('keydown', e => {
     if ((e.metaKey || e.ctrlKey) && e.key === 'c' && !getSelection().toString() && !e.target.closest('input, textarea')) copyPage(document.querySelector('.copy-page'));
