@@ -1,31 +1,67 @@
 ---
-tag: 5 min
-endpoint: uv · git · an agent
+tag: 10 min
+endpoint: agent/skills/slp-setup/SKILL.md · /slp-init
 ---
 
 # Getting started
 
-Three things, then one prompt.
+Know what you want before you open the agent. Then two skills: one sets up the agent, one sets up the topic.
 
-```shell
-git clone https://github.com/GustavoPenaBeltrami/self-learning-platform.git
-cd self-learning-platform
-uv run slp
-```
+## Have this ready
+
+| what | example |
+| --- | --- |
+| subject | *HTTP basics*, the AWS Cloud Practitioner cert, a novel |
+| sources | a PDF on disk, a course URL, the official docs |
+| timeframe | an end date: `2026-12-01` |
+| frequency | cadence and session length: 3× a week, 45 min |
+| goal | 1–3 concrete goals, and why: "justify PUT vs POST in a review" |
+
+`slp-init` asks for all of it. Vague goals get asked again: they become the topic's mission.
+
+## 1 · Set up the agent
+
+Open your agent at the repo root and send:
 
 ```agent
-Read AGENTS.md and run slp-setup.
+Read AGENTS.md, then read agent/skills/slp-setup/SKILL.md and follow it.
 ```
 
-## Requirements
+On the first run your agent hasn't loaded the skills yet, so it can't call `/slp-setup`: the prompt points it at the file. It detects which agent it is and exposes `agent/skills` and `agent/agents` in that agent's format: symlinks if it supports them, conversion if not. Everything it creates goes to `.git/info/exclude`.
 
-- **uv**: the only thing you install. It fetches Python and the packages
-- **a coding agent**: any, with permission in the repo folder. Claude Code recommended
-- **internet**: for the first `uv run slp` only. After that it aims to work offline: Mermaid, KaTeX and fonts ship in `app/vendor/`
+```what it runs · claude code
+mkdir -p .claude
+ln -s ../agent/skills .claude/skills
+ln -s ../agent/agents .claude/agents
+```
 
-## Path
+Full reference: [slp-setup](slp-setup.md).
 
-1. [install](install.md) uv and clone the repo
-2. [setup](setup.md) your agent with `slp-setup`
-3. [init](init.md) your first topic with `/slp-init`
-4. [start the app](cli.md) with `uv run slp`
+## 2 · Create a topic
+
+A topic is anything you study: a book, a certification, a tool's docs, a course. The skills are loaded now, so call it by name.
+
+```agent
+/slp-init
+I want to start studying HTTP.
+```
+
+The agent interviews you, creates the folder, checks your level with a few questions and offers a dedicated teacher.
+
+```creates
+topics/<slug>/
+├── topic.json    # goals, languages, sources, routine
+├── learning.md   # mission, glossary, record
+├── resources/  notes/  exams/  exercises/
+└── progress/
+    ├── status.md
+    └── log.md
+```
+
+`topics/example/` is a small one to look at. Your own topics are git-ignored.
+
+## 3 · Study
+
+Start the app with `uv run slp`, and each session with `/slp-session`: it shows what's pending and hands off to the right skill.
+
+Full reference: [slp-init](slp-init.md) · [skills](skills.md) · [topics/\<slug>](topics.md).

@@ -18,8 +18,4 @@ agent/
     └── teacher-<slug>.md  # ignored
 ```
 
-| in a skill | means |
-| --- | --- |
-| `AskUserQuestion` | ask with options, or a numbered question |
-| `Agent` | delegate to `agent/agents/X.md`, or follow it yourself |
-| `WebSearch` | search the web, as `sources_mode` allows |
+Skill list and tool-name mapping: [skills](skills.md). Agents: [researcher](researcher.md), [teacher-\<slug>](teacher.md).

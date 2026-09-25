@@ -21,9 +21,11 @@ topics/http-basics/
 agent/agents/teacher-http-basics.md
 ```
 
-- **triggers**: "I want to start studying X", "create a new topic"
-- **asks**: title, type (book, certification, documentation, course, practice), area, goals, reason, languages, sources
-- **writes**: `topic.json`, `learning.md`, `progress/`, optional `agent/agents/teacher-<slug>.md`
+- **manual only**: `disable-model-invocation: true`. Call `/slp-init`; the agent won't start it on its own
+- **asks**: title, subtitle, type (book, certification, documentation, course, practice), area, goals, reason, languages, routine, end date, sources, `sources_mode`
+- **slug**: kebab-case of the title. Stops if the folder exists
+- **writes**: `topic.json`, `learning.md`, `progress/`, empty `resources/ notes/ exams/ exercises/`, optional `agent/agents/teacher-<slug>.md`
+- **diagnosis**: 5–8 questions in the terminal, not saved as an exam. The result goes to `learning.md`
 
 ## Steps
 

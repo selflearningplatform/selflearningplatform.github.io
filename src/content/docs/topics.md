@@ -30,5 +30,7 @@ topics/<slug>/
     └── log.md
 ```
 
+- **slug**: the folder name, kebab-case of the title: `http-basics`
+- **resources/**: your material, served as is by the app. Always a source
 - **git**: `topics/*` is ignored except `topics/example/`
 - **review**: `topics/review/` holds cross-topic reviews

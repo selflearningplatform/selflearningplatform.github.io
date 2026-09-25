@@ -1,17 +1,13 @@
 export const NAV = [
   ['introduction', [
     ['overview', 'overview'],
-    ['getting-started', 'getting started'],
+    ['prerequisites', 'prerequisites'],
     ['install', 'installation'],
-    ['setup', 'setup'],
-    ['init', 'init'],
-    ['cli', 'uv run slp'],
-    ['windows', 'three windows'],
-    ['language', 'language'],
-    ['dictation', 'dictation'],
-    ['profiles', 'profiles'],
+    ['getting-started', 'getting started'],
   ]],
-  ['skills', [
+  ['ai teacher', [
+    ['ai-teacher', 'why an agent'],
+    ['skills', 'skills'],
     ['slp-session', 'slp-session', 'plan'],
     ['slp-setup', 'slp-setup', 'setup'],
     ['slp-init', 'slp-init', 'setup'],
@@ -21,12 +17,19 @@ export const NAV = [
     ['slp-exam', 'slp-exam', 'prac'],
     ['slp-grade', 'slp-grade', 'feed'],
     ['slp-review', 'slp-review', 'rev'],
-  ]],
-  ['agents', [
     ['researcher', 'researcher', 'agent'],
     ['teacher', 'teacher-<slug>', 'agent'],
+    ['profiles', 'profiles'],
   ]],
-  ['folders', [
+  ['visual interface', [
+    ['cli', 'uv run slp'],
+    ['editor', 'notes', 'view'],
+    ['exam-app', 'exams', 'view'],
+    ['settings', 'settings', 'view'],
+    ['dictation', 'dictation'],
+    ['shortcuts', 'shortcuts'],
+  ]],
+  ['filesystem', [
     ['topics', 'topics/<slug>', 'dir'],
     ['topic-json', 'topic.json', 'file'],
     ['learning-md', 'learning.md', 'file'],
@@ -34,10 +37,12 @@ export const NAV = [
     ['exams', 'exams/', 'dir'],
     ['exercises', 'exercises/', 'dir'],
     ['progress', 'progress/', 'dir'],
+    ['settings-json', 'settings.json', 'file'],
     ['agent-dir', 'agent/', 'dir'],
   ]],
   ['project', [
     ['contributing', 'contributing'],
+    ['roadmap', 'roadmap'],
   ]],
 ];
 
