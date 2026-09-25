@@ -56,4 +56,4 @@ Four pieces talk to each other through the filesystem:
 - **core**: the app, handwritten notes, sitting exams and reviewing. Needs no model at all
 - **agent layer**: skills and agents that automate teaching, exams, grading and review, on whatever model you plug in
 
-Next: [prerequisites](prerequisites.md) · [AI teacher](ai-teacher.md) · [the app](cli.md).
+Next: [prerequisites](prerequisites.md) · [AI teacher](ai-teacher.md) · [deploy](deploy.md).
