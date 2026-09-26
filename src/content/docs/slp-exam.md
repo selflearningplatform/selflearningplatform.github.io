@@ -28,8 +28,11 @@ Builds a JSON exam from content you paste, audited first against the topic's pro
 }
 ```
 
-- **writes**: `exams/<exam>/exam.json`
-- **size**: 10–15 questions: ~30% definitions, ~40% application, ~30% trade-offs
+- **material**: what you paste; otherwise the unit's notes and [wiki](wiki.md) pages; otherwise the topic's sources. Nothing invented
+- **writes**: `exams/<NN>-<title>/exam.json`. An exam with attempts is never replaced: a new one gets `-b`
+- **types**: asks which go in. Multiple choice and open are preselected, plus oral and practical for `practice` topics
+- **size**: 10–15 questions: ~30% definitions, ~40% application, ~30% trade-offs. About 60% multiple choice
+- **after**: sit it in the [app](exam-app.md), then [slp-grade](slp-grade.md) grades the attempt
 
 ## Question types
 

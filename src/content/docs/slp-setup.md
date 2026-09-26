@@ -26,8 +26,9 @@ Read AGENTS.md, then read agent/skills/slp-setup/SKILL.md and follow it.
 
 - **manual only**: `disable-model-invocation: true`. On the first run the skills aren't loaded yet, so point the agent at the file; later, `/slp-setup` works
 - **when**: first time with a new agent, or after editing `agent/` if your agent uses conversion
-- **reads**: `profile` in `settings.json`, the agent's current docs
-- **writes**: symlinks or converted files, plus `.git/info/exclude`
+- **reads**: `global.profile` in `settings.json`, the agent's current docs
+- **hooks**: optional. At start `uv run slp sessions` closes idle sessions; at exit `uv run slp sessions close` ends the open ones, and the next `slp-session` corrects that end if the work stopped earlier
+- **writes**: symlinks or converted files, the hooks if you accept them (`.claude/settings.local.json` in Claude Code), plus `.git/info/exclude`
 
 ## Order of preference
 

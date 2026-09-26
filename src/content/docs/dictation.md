@@ -24,7 +24,7 @@ uv run slp transcribe attempts/2026-09-24T1030-p3.webm en
 
 ## In the notes
 
-`ctrl+m` or the mic button starts and stops. Grey text is provisional and keeps changing while you talk; every ~15 s the finished part is committed. The language is the topic's `language.notes`.
+`ctrl+m` or the mic button starts and stops. The key can be changed in [settings](settings.md) → shortcuts. Grey text is provisional and keeps changing while you talk; every ~15 s the finished part is committed. The language is the topic's `language.notes`.
 
 ## In exams
 
@@ -42,6 +42,6 @@ Oral answers are recorded, not transcribed live. The audio is saved next to the 
 | `large-v3` | ~3 GB | ~10 GB |
 
 - **default**: `turbo` on Apple Silicon, `small` on CPU
-- **choose**: `voice_model` in [settings](settings.md): a size, or the path to a model you already have
+- **choose**: `voice_model` in [settings](settings.md) → global: a size, or the path to a model you already have
 - **where it comes from**: `models/` first; if missing, the `online` profile downloads it on first use and `offline` uses a cached copy or falls back to the OS dictation
 - **`uv run slp setup`**: `auto` and `online` download `turbo`; `offline` shows your RAM and disk, suggests a size and lets you pick one, a path, or none

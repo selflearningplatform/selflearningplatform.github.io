@@ -30,18 +30,19 @@ uv run slp
 
 ## Recommended setup
 
-Three windows side by side. Two monitors help.
+Your material, the app and the agent side by side. Two monitors help.
 
 ```layout
 ┌──────────┬──────────┬──────────┐
 │ material │   app    │  agent   │
 │  pdf     │  notes   │  /slp-*  │
 │  course  │  exams   │          │
+│          │  cards   │          │
 └──────────┴──────────┴──────────┘
 ```
 
 - **1 · material**: the PDF, the course, the docs. Whatever you're studying
-- **2 · app**: `uv run slp` in the browser: notes, exams, settings
+- **2 · app**: `uv run slp` in the browser: notes, exams, cards, settings
 - **3 · agent**: open at the repo root. Teaches, builds exams, grades
 
 Next: [getting started](getting-started.md).

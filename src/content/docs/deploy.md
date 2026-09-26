@@ -22,21 +22,24 @@ Study app at http://localhost:8321/app/views/notes.html  (ctrl+c to stop)
 | --- | --- |
 | `uv run slp` | start the app |
 | `uv run slp setup` | pick a profile and download the dictation model ahead of time |
+| `uv run slp sessions` | close idle study sessions and print the open ones |
+| `uv run slp sessions close` | close every open study session |
 | `uv run slp transcribe <audio> [lang]` | print the transcription of an audio file |
 
 ## Layout
 
 ```screen
-┌ 1 notes  2 exams  3 project  4 settings ── clock ── tools · theme ┐
-│ explorer │                                                       │
-│ topics/  │   the view                                            │
-│ index    │                                                       │
-└ NORMAL  ~/path          status · zoom % · width px · Top ────────┘
+┌ 1 notes  2 exams  3 cards  4 project  5 settings ── clock ── tools ┐
+│ explorer │                                                         │
+│ topics/  │   the view                                              │
+│ index    │                                                         │
+└ NORMAL  ~/path  status · session · zoom % · width px · theme · Top ┘
 ```
 
-- **top bar**: the four views, a clock, the notes toolbar, the theme picker
+- **top bar**: the five views, a clock, and the tools of the current view
 - **explorer**: topics and their contents, per view
-- **status line**: mode (`NORMAL`, `INSERT`, `PASS`/`FAIL`), path, save status, content zoom, text width and scroll position. Zoom and width are remembered per browser, width per view
+- **status line**: mode (`NORMAL`, `INSERT`, `PASS`/`FAIL`), path, save status, the session control, content zoom, text width, theme picker and scroll position. Zoom and width are remembered per browser
+- **session control**: shown when a topic is open. Start or stop a study session by hand; otherwise the app opens one on any activity in the topic and closes it after 30 idle minutes
 
 ## Views
 
@@ -44,5 +47,6 @@ Study app at http://localhost:8321/app/views/notes.html  (ctrl+c to stop)
 | --- | --- |
 | [notes](editor.md) | list of topics, and the notebook of each one |
 | [exams](exam-app.md) | list of exams per topic, and the simulator |
-| project | the project's own README: name, three windows, loop, pieces, principles |
-| [settings](settings.md) | profile, theme, fonts, dictation model. Also at `/settings` |
+| [cards](cards-app.md) | card sets per topic, and the flashcard study |
+| project | the project's own README: name, quick start, how it works, AI teacher, your topics, principles |
+| [settings](settings.md) | global (profile, fonts, dictation model), shortcuts, cards and themes. Also at `/settings` |

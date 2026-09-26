@@ -27,7 +27,7 @@ Open your agent at the repo root and send:
 Read AGENTS.md, then read agent/skills/slp-setup/SKILL.md and follow it.
 ```
 
-On the first run your agent hasn't loaded the skills yet, so it can't call `/slp-setup`: the prompt points it at the file. It detects which agent it is and exposes `agent/skills` and `agent/agents` in that agent's format: symlinks if it supports them, conversion if not. Everything it creates goes to `.git/info/exclude`.
+On the first run your agent hasn't loaded the skills yet, so it can't call `/slp-setup`: the prompt points it at the file. It detects which agent it is and exposes `agent/skills` and `agent/agents` in that agent's format: symlinks if it supports them, conversion if not. It also offers optional session hooks, where your agent supports them. Everything it creates goes to `.git/info/exclude`.
 
 ```what it runs · claude code
 mkdir -p .claude
@@ -53,15 +53,18 @@ topics/<slug>/
 ├── topic.json    # goals, languages, sources, routine
 ├── learning.md   # mission, glossary, record
 ├── resources/  notes/  exams/  exercises/
+├── wiki/
+│   └── index.md  # the agent's map of the subject (OKF)
 └── progress/
     ├── status.md
-    └── log.md
+    ├── log.md
+    └── sessions.jsonl
 ```
 
 `topics/example/` is a small one to look at. Your own topics are git-ignored.
 
 ## 3 · Study
 
-Start the app with `uv run slp`, and each session with `/slp-session`: it shows what's pending and hands off to the right skill.
+Start the app with `uv run slp`, and each session with `/slp-session`: it shows what's pending and hands off to the right skill. The app records your study sessions on its own.
 
 Full reference: [slp-init](slp-init.md) · [skills](skills.md) · [topics/\<slug>](topics.md).

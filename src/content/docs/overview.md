@@ -35,8 +35,9 @@ Knowledge you can't express was never learned. So every step ends in something y
 self-learning-platform/
 ├── AGENTS.md    # read by any agent
 ├── agent/
-│   ├── skills/  # slp-*/SKILL.md
-│   └── agents/  # researcher, teacher-*
+│   ├── skills/     # slp-*/SKILL.md
+│   ├── agents/     # researcher, teacher-*
+│   └── reference/  # shared file formats and rules
 ├── app/         # uv run slp
 └── topics/
     └── example/
@@ -46,14 +47,14 @@ Four pieces talk to each other through the filesystem:
 
 | path | role |
 | --- | --- |
-| `agent/skills/` | the method: teach, build exams and exercises, grade, review |
+| `agent/skills/` | the method: teach, build exams, exercises and cards, grade, quiz |
 | `agent/agents/` | a researcher that verifies, and a teacher per topic |
-| `topics/<slug>/` | notes in Markdown, exams in JSON, attempts, progress. No database |
-| `app/` | local notebook and exam simulator, with dictation, Mermaid and LaTeX |
+| `topics/<slug>/` | notes in Markdown, exams and cards in JSON, attempts, a wiki, progress. No database |
+| `app/` | local notebook, exam simulator and flashcards, with dictation, Mermaid and LaTeX. Tracks your study sessions |
 
 ## Layers
 
-- **core**: the app, handwritten notes, sitting exams and reviewing. Needs no model at all
-- **agent layer**: skills and agents that automate teaching, exams, grading and review, on whatever model you plug in
+- **core**: the app, your notes, exams, cards and session tracking. Needs no agent or model, and every file is plain Markdown or JSON you can write by hand
+- **agent layer** (optional): skills and agents for teaching, grading, feedback, progress and the wiki, on whatever model you plug in
 
 Next: [prerequisites](prerequisites.md) · [AI teacher](ai-teacher.md) · [deploy](deploy.md).
