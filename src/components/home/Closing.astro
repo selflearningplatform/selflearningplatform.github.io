@@ -1,0 +1,22 @@
+---
+const GH = 'https://github.com/GustavoPenaBeltrami/self-learning-platform';
+---
+<section class="closing">
+  <div class="kanji" aria-hidden="true">独</div>
+  <div class="label">独学 · dokugaku</div>
+  <h2>Study alone. Never unguided.</h2>
+  <p class="intro">One person, one topic, and the discipline to keep going. The agent teaches, quizzes and grades. The learning stays yours.</p>
+  <div class="btns"><a class="btn primary" href="#start">get started</a><a class="btn" href={GH}>view on github</a></div>
+</section>
+
+<style>
+  .closing { position: relative; overflow: clip; }
+  .closing > :not(.kanji) { position: relative; }
+  .kanji { position: absolute; inset: 0; display: grid; place-items: center; font: 900 clamp(220px, 38vw, 460px)/1 var(--kanji); color: var(--graphite); pointer-events: none; user-select: none; animation: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes closing-drift { from { transform: translateY(-18%); } to { transform: translateY(18%); } }
+    @supports (animation-timeline: view()) {
+      .kanji { animation-name: closing-drift; animation-timing-function: linear; animation-fill-mode: both; animation-duration: auto; animation-timeline: view(); animation-range: cover; }
+    }
+  }
+</style>

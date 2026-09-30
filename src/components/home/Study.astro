@@ -1,0 +1,115 @@
+<section>
+  <div class="label">03 / how you study</div>
+  <p class="intro">Three windows side by side. You read the material, work in the app, and ask the teacher when you're stuck.</p>
+  <div class="stage" data-reveal role="img" aria-label="three windows side by side: reading material, the SLP exam app, and the teacher chat">
+    <div class="panel-h"><span>~/topics/http-basics</span><span>material · app · teacher</span></div>
+    <div class="panes">
+      <div>
+        <div class="pane-h"><span>material</span><span>http-guide.pdf · p.31</span></div>
+        <strong>3.2 idempotent methods</strong>
+        <p>An idempotent request has the same effect whether you send it once or ten times. <mark>GET, HEAD, PUT and DELETE are idempotent.</mark> POST is not.</p>
+        <strong>3.3 safe methods</strong>
+        <p class="muted">A safe method only reads. It never changes state on the server.</p>
+      </div>
+      <div>
+        <div class="pane-h"><span>app · exams</span><span>exam 02 · 4 of 10</span></div>
+        <strong>A client times out after POST /orders. Is it safe to retry the request?</strong>
+        <ul class="opts">
+          <li><b>a</b>yes, every request can be retried</li>
+          <li class="on"><b>b</b>no, POST is not idempotent. you may create a duplicate order</li>
+          <li><b>c</b>yes, if the server returned 200 before</li>
+          <li><b>d</b>only over https</li>
+        </ul>
+      </div>
+      <div>
+        <div class="pane-h"><span>teacher</span><span>teacher-http-basics</span></div>
+        <dl class="chat">
+          <dt>you</dt><dd>i didn't get idempotency</dd>
+          <dt>teacher</dt><dd>before i explain: is <code>GET /orders</code> safe to retry? why?</dd>
+          <dt>you</dt><dd>yes, it only reads data</dd>
+          <dt>teacher</dt><dd>✓ right. now the same question for <code>POST /orders</code></dd>
+        </dl>
+      </div>
+    </div>
+    <div class="panel-h foot"><span>NORMAL · session recording · <span data-clock>00:42:10</span></span><span>2 cards due · exam 02 waiting for a grade</span></div>
+  </div>
+</section>
+
+<style>
+  .stage { animation: none; overflow: clip; }
+  .panes > div:nth-child(1) { --dx: -48px; --dy: 0px; }
+  .panes > div:nth-child(2) { --dx: 0px; --dy: 32px; }
+  .panes > div:nth-child(3) { --dx: 48px; --dy: 0px; }
+  .panes mark { background: linear-gradient(var(--paper), var(--paper)) no-repeat 0 0 / 100% 100%; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .opts li.on::after { content: "✓"; margin-left: auto; opacity: 0; }
+  .chat dd:last-child::after { content: ""; display: inline-block; width: .55em; height: 1.1em; margin-left: 4px; vertical-align: text-bottom; background: var(--paper); }
+  @media (hover: hover) {
+    .panes > div:hover { background: var(--graphite); }
+    .panes:hover > div:not(:hover) > * { opacity: .4; }
+    .opts li:hover { border-color: var(--fog); color: var(--paper); }
+    .panes > div:hover li.on::after { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes study-in { from { opacity: 0; transform: translate(var(--dx), var(--dy)); } }
+    @keyframes study-sweep { from { background-size: 0 100%; color: var(--chalk); } 70% { color: var(--chalk); } }
+    @keyframes study-blink { 50% { opacity: 0; } }
+    .stage { transform: perspective(1400px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .3s ease-out; }
+    .panes > div { transition: background-color .3s ease; }
+    .panes > div > * { transition: opacity .3s ease; }
+    .opts li { transition: border-color .2s ease, color .2s ease, transform .2s ease; }
+    .opts li.on::after { transform: scale(.4); transition: opacity .25s ease, transform .3s cubic-bezier(.3, 1.6, .5, 1); }
+    .chat dd:last-child::after { animation: study-blink 1s steps(1) infinite; }
+    @media (hover: hover) {
+      .opts li:hover { transform: translateX(4px); }
+      .panes > div:hover mark { animation: study-sweep .7s cubic-bezier(.2, .7, .2, 1) both; }
+    }
+    @supports (animation-timeline: view()) {
+      .panes > div { animation-name: study-in; animation-timing-function: linear; animation-fill-mode: both; animation-duration: auto; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+    }
+    :global(.reveal-io) .panes > div { transition: opacity .7s ease-out, transform .7s cubic-bezier(.2, .7, .2, 1), background-color .3s ease; }
+    :global(.reveal-io) .panes > div:nth-child(2) { transition-delay: .1s, .1s, 0s; }
+    :global(.reveal-io) .panes > div:nth-child(3) { transition-delay: .2s, .2s, 0s; }
+    :global(.reveal-io) .stage:not(.in) .panes > div { opacity: 0; transform: translate(var(--dx), var(--dy)); }
+  }
+</style>
+
+<script>
+  let controller: AbortController | null = null;
+  let clock = 0;
+  document.addEventListener('astro:page-load', () => {
+    const stage = document.querySelector<HTMLElement>('.stage');
+    if (!stage) return;
+    controller?.abort();
+    clearInterval(clock);
+    controller = new AbortController();
+    const time = stage.querySelector('[data-clock]');
+    if (time) {
+      let [h, m, s] = (time.textContent ?? '').split(':').map(Number);
+      let total = h * 3600 + m * 60 + s;
+      clock = window.setInterval(() => {
+        total++;
+        time.textContent = [total / 3600, (total / 60) % 60, total % 60].map(n => String(Math.floor(n)).padStart(2, '0')).join(':');
+      }, 1000);
+    }
+    if (!matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches) return;
+    let frame = 0;
+    stage.addEventListener('pointermove', e => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const r = stage.getBoundingClientRect();
+        stage.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - .5) * 3}deg`);
+        stage.style.setProperty('--rx', `${((e.clientY - r.top) / r.height - .5) * -3}deg`);
+      });
+    }, { signal: controller.signal });
+    stage.addEventListener('pointerleave', () => {
+      cancelAnimationFrame(frame);
+      stage.style.removeProperty('--rx');
+      stage.style.removeProperty('--ry');
+    }, { signal: controller.signal });
+  });
+  document.addEventListener('astro:before-swap', () => {
+    controller?.abort();
+    controller = null;
+    clearInterval(clock);
+  });
+</script>

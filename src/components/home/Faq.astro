@@ -1,0 +1,86 @@
+---
+const faqs = [
+  ['Does it work offline?', 'The app, notes, cards and exams work offline. The teacher needs a model. With a local model through Ollama you can study fully offline; with a cloud model you need internet.'],
+  ['What can I study?', "A book, a certification, a course, a tool's docs. You point the teacher at your sources, set a deadline and a pace, and it builds the topic from there."],
+  ['Will the teacher just give me the answers?', 'No. It asks before it tells, waits for you to try, grades your attempt against a rubric and records what you got wrong so it comes back in the next exercise.'],
+  ['Where is my data?', 'On your disk, in <code>topics/&lt;slug&gt;/</code>. Notes are Markdown, exams and cards are JSON. There is no account and no database.'],
+  ['Do I need to know how to code?', 'No. You install uv, clone the repo and paste one prompt into your agent. After that you talk to it in plain language.'],
+  ['What does it cost?', 'Nothing. SLP is open source under the MIT license. You pay only for the model your agent uses, if any.'],
+];
+const half = Math.ceil(faqs.length / 2);
+const columns = [faqs.slice(0, half), faqs.slice(half)];
+---
+<section id="faq">
+  <div class="label">09 / faq</div>
+  <div class="grid" data-reveal>
+    {columns.map((column, c) => (
+      <div class="faq">
+        {column.map(([question, answer], i) => (
+          <details style={`--i:${c * half + i}`}><summary>{question}</summary><p set:html={answer} /></details>
+        ))}
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .grid { display: grid; gap: 0 64px; align-items: start; animation: none; }
+  .faq { max-width: none; }
+  @media (min-width: 900px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 899px) { .faq + .faq { border-top: 0; } }
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes faq-rise { from { opacity: 0; transform: translateY(12px); } }
+    @supports (animation-timeline: view()) {
+      details { animation-name: faq-rise; animation-timing-function: linear; animation-fill-mode: both; animation-duration: auto; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+      .faq + .faq details { animation-range: entry 20% entry 100%; }
+    }
+    :global(.reveal-io) details { transition: opacity .5s ease-out, transform .5s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--i) * 80ms); }
+    :global(.reveal-io) .grid:not(.in) details { opacity: 0; transform: translateY(12px); }
+    .faq summary, .faq summary::before, .faq summary::after { transition: color .2s ease-out, transform .3s cubic-bezier(.2, .7, .2, 1); }
+    .faq details.is-closing summary::after { transition-duration: .2s; }
+  }
+  .faq summary { position: relative; color: var(--chalk); }
+  .faq summary::before { content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px; background: var(--steel); transform: scaleX(0); transform-origin: left; }
+  .faq summary::after, .faq details[open] summary::after { content: "+"; color: var(--steel); }
+  .faq summary:hover, .faq summary:focus-visible, .faq details[open] summary { color: var(--paper); }
+  .faq summary:hover::before, .faq summary:focus-visible::before { transform: scaleX(1); }
+  .faq summary:hover::after { color: var(--paper); transform: translateX(-2px); }
+  .faq details[open]:not(.is-closing) summary::after { color: var(--paper); transform: rotate(45deg); }
+</style>
+
+<script>
+  let controller: AbortController | undefined;
+  const ease = 'cubic-bezier(.2, .7, .2, 1)';
+  document.addEventListener('astro:page-load', () => {
+    const root = document.getElementById('faq');
+    if (!root || root.dataset.faqReady || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    root.dataset.faqReady = '';
+    controller = new AbortController();
+    root.addEventListener('click', event => {
+      const summary = (event.target as Element).closest('summary');
+      const details = summary?.parentElement as HTMLDetailsElement | null;
+      const answer = details?.querySelector('p');
+      if (!summary || !details || !answer) return;
+      event.preventDefault();
+      const running = details.getAnimations({ subtree: true }).filter(a => a.id === 'faq');
+      const from = details.offsetHeight;
+      running.forEach(a => a.cancel());
+      const closing = details.open && !details.classList.contains('is-closing');
+      details.classList.toggle('is-closing', closing);
+      details.open = true;
+      const to = (closing ? summary.offsetHeight : details.scrollHeight) + details.offsetHeight - details.clientHeight;
+      const height = details.animate({ height: [`${from}px`, `${to}px`], overflow: ['hidden', 'hidden'] }, { duration: closing ? 260 : 360, easing: ease });
+      height.id = 'faq';
+      const text = answer.animate(closing
+        ? { opacity: [1, 0], transform: ['none', 'translateY(-4px)'] }
+        : { opacity: [0, 1], transform: ['translateY(6px)', 'none'] },
+        { duration: closing ? 180 : 320, delay: closing ? 0 : 60, easing: ease, fill: 'both' });
+      text.id = 'faq';
+      height.onfinish = () => {
+        if (closing) details.open = false;
+        details.classList.remove('is-closing');
+      };
+    }, { signal: controller.signal });
+  });
+  document.addEventListener('astro:before-swap', () => controller?.abort());
+</script>

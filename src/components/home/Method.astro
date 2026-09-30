@@ -1,0 +1,254 @@
+---
+const steps = [
+  { name: 'level', skills: '/slp-quiz', text: 'A short quiz that finds where you are. Same bank each time, so you can see yourself move.' },
+  { name: 'prepare', skills: '/slp-teach · /slp-summarize', text: 'The teacher explains until you understand it, not memorize it, then turns the material into notes.' },
+  { name: 'practice', skills: '/slp-exam · /slp-exercises', text: 'Exams you sit in the app. Exercises where you build something: code, an ADR, a critique.' },
+  { name: 'feedback', skills: '/slp-grade', text: 'Every attempt graded against a rubric. Each miss points to the note that covers it.' },
+  { name: 'review', skills: '/slp-cards · /slp-session', text: "Cards made from your own notes, spaced with Leitner boxes so they don't fade." },
+];
+const pad = (i: number) => String(i + 1).padStart(2, '0');
+const total = String(steps.length).padStart(2, '0');
+---
+<section id="loop" class="method">
+  <div class="label">04 / the method</div>
+  <p class="intro">Find your level, learn, practice, get graded, review. Each pass starts from what the last one found out about you.</p>
+
+  <div class="rail" data-method>
+    <div class="pin">
+      <div class="bar">
+        <p class="count"><b data-count>01</b> / {total}</p>
+        <div class="map">
+          <span class="line" aria-hidden="true"><span class="fill" data-fill></span></span>
+          <ol aria-label="method steps">
+          {steps.map((s, i) => (
+            <li><button type="button" data-node={i} aria-current={i === 0 ? 'step' : undefined} aria-label={`go to step ${pad(i)}, ${s.name}`}><i aria-hidden="true"></i><span>{pad(i)} {s.name}</span></button></li>
+          ))}
+          </ol>
+        </div>
+      </div>
+
+      <div class="view">
+        <ol class="track" data-track>
+          {steps.map((s, i) => (
+            <li class:list={['step', { on: i === 0 }]} data-step={i}>
+              <div class="head"><strong>{s.name}</strong><span>{pad(i)}</span></div>
+              {i === 0 && (
+                <div class="art level" aria-hidden="true">
+                  <ol><li>5 fluent</li><li>4</li><li>3</li><li>2</li><li>1 new</li></ol>
+                  <span class="you">◀ you</span>
+                  <small>q 4/8 · right → harder</small>
+                </div>
+              )}
+              {i === 1 && (
+                <div class="art notes" aria-hidden="true">
+                  <b># idempotency</b>
+                  <i style="--w:.92"></i><i style="--w:.74"></i><i style="--w:.86"></i><i style="--w:.52"></i>
+                  <span class="caret">▍</span>
+                </div>
+              )}
+              {i === 2 && (
+                <div class="art exam" aria-hidden="true">
+                  <small>q 4 · safe to retry?</small>
+                  <ul><li>a. POST /orders</li><li class="pick">b. PUT /orders/7<em>✓</em></li><li>c. PATCH /orders/7</li></ul>
+                </div>
+              )}
+              {i === 3 && (
+                <div class="art rubric" aria-hidden="true">
+                  <p>safe vs idempotent<em>✓</em></p>
+                  <p>PUT replaces<em>✓</em></p>
+                  <p>idempotency keys<em>✕ notes/03</em></p>
+                  <small>score 2/3</small>
+                </div>
+              )}
+              {i === 4 && (
+                <div class="art cards" aria-hidden="true">
+                  <div class="card"><span>is POST idempotent?</span><span>no · keys make it so</span></div>
+                  <div class="boxes"><span>0d</span><span>1d</span><span>3d</span><span>7d</span><i></i></div>
+                </div>
+              )}
+              <p>{s.text}</p>
+              <code>{s.skills}</code>
+            </li>
+          ))}
+          <li class="step loop" data-step={steps.length}>
+            <div class="head"><strong>again</strong><span>↺</span></div>
+            <pre aria-hidden="true">01 → 02 → 03 → 04 → 05
+▲                   │
+└───────────────────┘</pre>
+            <p>Each pass starts from what the last one found out about you.</p>
+            <code>the teacher keeps the profile</code>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <p class="note">// when you finish a unit, the teacher suggests the next step: cards, then an exercise, then an exam</p>
+</section>
+
+<style>
+  .rail { position: relative; height: calc(400vh - 56px); animation: none !important; }
+  .pin { position: sticky; top: max(56px, calc(50vh - 352px)); height: min(calc(100vh - 56px), 760px); display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 32px; padding: 32px 0; overflow: clip; }
+  .bar { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 32px; align-items: center; }
+  .count { font-size: 12px; color: var(--steel); }
+  .count b { font-size: 22px; color: var(--paper); }
+  .map { position: relative; }
+  .map ol { position: relative; margin: 0; padding: 0; list-style: none; display: flex; justify-content: space-between; }
+  .line { position: absolute; left: 6px; right: 6px; top: 6px; height: 1px; background: var(--iron); }
+  .fill { position: absolute; inset: 0; background: var(--paper); transform: scaleX(0); transform-origin: left; }
+  .map li { position: relative; }
+  .map button { display: grid; justify-items: start; gap: 10px; padding: 0; background: none; border: 0; color: var(--steel); font: inherit; font-size: 12px; cursor: pointer; }
+  .map li:last-child button { justify-items: end; }
+  .map button i { width: 13px; height: 13px; border: 1px solid var(--slate); background: var(--void); }
+  .map button.done i { background: var(--steel); border-color: var(--steel); }
+  .map button[aria-current] { color: var(--paper); }
+  .map button[aria-current] i { background: var(--paper); border-color: var(--paper); }
+  .map button:hover { color: var(--chalk); }
+  .map button:focus-visible { outline: 1px solid var(--paper); outline-offset: 4px; }
+
+  .view { min-height: 0; border: 1px solid var(--iron); overflow: clip; }
+  .track { margin: 0; padding: 0; list-style: none; display: flex; height: 100%; width: max-content; will-change: transform; }
+  .step { width: min(420px, 78vw); padding: 28px 24px; display: grid; grid-template-rows: auto 1fr auto auto; gap: 16px; border-right: 1px solid var(--iron); color: var(--steel); }
+  .step.on { color: var(--paper); }
+  .step > p { font-size: 13px; text-wrap: pretty; }
+  .step.on > p { color: var(--chalk); }
+  .step > code { color: inherit; font-size: 12px; border-top: 1px dashed var(--slate); padding-top: 12px; }
+  .head { display: flex; gap: 10px; align-items: baseline; }
+  .head strong { font-size: 15px; }
+  .head span { font-size: 12px; }
+
+  .art { position: relative; align-self: center; border: 1px solid var(--iron); padding: 16px; font-size: 12px; line-height: 20px; display: grid; gap: 6px; min-height: 150px; }
+  .art small { font-size: 11px; color: var(--steel); }
+  .art em { font-style: normal; margin-left: auto; }
+  .level ol { margin: 0; padding: 0; list-style: none; }
+  .level .you { position: absolute; top: 17px; right: 16px; transform: translateY(40px); }
+  .notes b { font-size: 12px; }
+  .notes i { display: block; height: 6px; width: calc(var(--w) * 100%); background: currentColor; opacity: .5; transform-origin: left; }
+  .notes .caret { line-height: 1; }
+  .exam ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+  .exam li { display: flex; padding: 2px 8px; border: 1px solid var(--iron); }
+  .exam .pick { border-color: currentColor; }
+  .rubric p { display: flex; gap: 12px; border-bottom: 1px solid var(--iron); }
+  .cards { perspective: 600px; gap: 14px; }
+  .card { display: grid; height: 56px; transform-style: preserve-3d; }
+  .card span { grid-area: 1 / 1; display: grid; place-items: center; border: 1px solid currentColor; background: var(--void); backface-visibility: hidden; }
+  .card span:last-child { transform: rotateY(180deg); }
+  .boxes { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .boxes span { border: 1px solid var(--iron); text-align: center; }
+  .boxes i { position: absolute; top: -8px; left: 0; width: 25%; height: 4px; }
+  .boxes i::before { content: ""; display: block; width: 12px; height: 4px; margin: 0 auto; background: currentColor; }
+
+  .loop pre { align-self: center; border: 0; background: none; padding: 0; color: inherit; font-size: 13px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .step.on .level .you { animation: climb 4s steps(1) infinite; }
+    .step.on .notes i { animation: write 3.2s ease-out infinite both; }
+    .step.on .notes i:nth-of-type(2) { animation-delay: .3s; }
+    .step.on .notes i:nth-of-type(3) { animation-delay: .6s; }
+    .step.on .notes i:nth-of-type(4) { animation-delay: .9s; }
+    .step.on .notes .caret { animation: blink 1s steps(2) infinite; }
+    .step.on .exam em { animation: tick 2.4s ease-out infinite both; }
+    .step.on .rubric p, .step.on .rubric small { animation: tick 3.6s ease-out infinite both; }
+    .step.on .rubric p:nth-child(2) { animation-delay: .4s; }
+    .step.on .rubric p:nth-child(3) { animation-delay: .8s; }
+    .step.on .rubric small { animation-delay: 1.2s; }
+    .step.on .card { animation: flip 4s ease-in-out infinite; }
+    .step.on .boxes i { animation: hop 4s steps(1) infinite; }
+    .step.loop.on pre { animation: tick 2s ease-out both; }
+    .fill { transition: transform .12s linear; }
+  }
+  @keyframes climb { 0% { transform: translateY(40px); } 25% { transform: translateY(20px); } 50% { transform: translateY(0); } 75% { transform: translateY(20px); } }
+  @keyframes write { 0% { transform: scaleX(0); } 40%, 100% { transform: scaleX(1); } }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes tick { 0% { opacity: 0; } 30%, 100% { opacity: 1; } }
+  @keyframes flip { 0%, 35% { transform: rotateY(0); } 50%, 85% { transform: rotateY(180deg); } 100% { transform: rotateY(360deg); } }
+  @keyframes hop { 0% { transform: translateX(0); } 25% { transform: translateX(100%); } 50% { transform: translateX(200%); } 75% { transform: translateX(300%); } }
+
+  @media (max-width: 759px), (max-height: 559px), (prefers-reduced-motion: reduce) {
+    .rail { height: auto; }
+    .pin { position: static; height: auto; display: block; padding: 0; overflow: visible; }
+    .bar { display: none; }
+    .view { border: 0; overflow: visible; }
+    .track { flex-direction: column; width: auto; transform: none !important; border-left: 1px solid var(--iron); }
+    .step { position: relative; width: auto; border-right: 0; padding: 0 0 40px 24px; color: var(--paper); }
+    .step > p { color: var(--chalk); }
+    .step::before { content: ""; position: absolute; left: -7px; top: 6px; width: 13px; height: 13px; border: 1px solid var(--paper); background: var(--void); }
+    .step.loop { padding-bottom: 0; }
+    .art { align-self: start; max-width: 360px; }
+  }
+</style>
+
+<script>
+  let cleanup: (() => void) | null = null;
+
+  document.addEventListener('astro:page-load', () => {
+    cleanup?.();
+    cleanup = null;
+    const rail = document.querySelector<HTMLElement>('[data-method]');
+    if (!rail) return;
+    const pin = rail.querySelector<HTMLElement>('.pin')!;
+    const track = rail.querySelector<HTMLElement>('[data-track]')!;
+    const fill = rail.querySelector<HTMLElement>('[data-fill]')!;
+    const count = rail.querySelector<HTMLElement>('[data-count]')!;
+    const nodes = [...rail.querySelectorAll<HTMLButtonElement>('[data-node]')];
+    const panels = [...rail.querySelectorAll<HTMLElement>('[data-step]')];
+    const last = panels.length - 1;
+    const stacked = matchMedia('(max-width: 759px), (max-height: 559px), (prefers-reduced-motion: reduce)');
+    let frame = 0;
+    let active = -1;
+
+    const update = () => {
+      frame = 0;
+      if (stacked.matches) {
+        panels.forEach(p => p.classList.add('on'));
+        track.style.transform = '';
+        active = -1;
+        return;
+      }
+      const r = rail.getBoundingClientRect();
+      const span = r.height - pin.offsetHeight;
+      const p = span > 0 ? Math.min(1, Math.max(0, (56 - r.top) / span)) : 0;
+      const shift = Math.max(0, track.scrollWidth - track.parentElement!.clientWidth);
+      track.style.transform = `translate3d(${-p * shift}px, 0, 0)`;
+      const pos = p * last;
+      fill.style.transform = `scaleX(${Math.min(1, pos / (nodes.length - 1))})`;
+      const next = Math.round(pos);
+      if (next === active) return;
+      active = next;
+      panels.forEach((el, i) => el.classList.toggle('on', i === next));
+      nodes.forEach((b, i) => {
+        b.classList.toggle('done', i < next);
+        if (i === Math.min(next, nodes.length - 1)) b.setAttribute('aria-current', 'step');
+        else b.removeAttribute('aria-current');
+      });
+      count.textContent = String(Math.min(next, nodes.length - 1) + 1).padStart(2, '0');
+    };
+
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+
+    const jump = (e: Event) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-node]');
+      if (!b) return;
+      const i = Number(b.dataset.node);
+      if (stacked.matches) { panels[i].scrollIntoView({ block: 'start' }); return; }
+      const r = rail.getBoundingClientRect();
+      const span = r.height - pin.offsetHeight;
+      window.scrollTo({ top: scrollY + r.top - 56 + (i / last) * span + 1, behavior: 'smooth' });
+    };
+
+    rail.addEventListener('click', jump);
+    addEventListener('scroll', schedule, { passive: true });
+    addEventListener('resize', schedule);
+    stacked.addEventListener('change', schedule);
+    update();
+
+    cleanup = () => {
+      cancelAnimationFrame(frame);
+      rail.removeEventListener('click', jump);
+      removeEventListener('scroll', schedule);
+      removeEventListener('resize', schedule);
+      stacked.removeEventListener('change', schedule);
+    };
+  });
+
+  document.addEventListener('astro:before-swap', () => { cleanup?.(); cleanup = null; });
+</script>

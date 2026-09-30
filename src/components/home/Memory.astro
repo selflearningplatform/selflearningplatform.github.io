@@ -1,0 +1,137 @@
+---
+const tree = [
+  { t: '<b>topics/http-basics/</b>' },
+  { t: '├── <b>learning.md</b>        <span class="c">// mission, record, corrections</span>', k: 'learning', f: 'learning.md', leaf: true },
+  { t: '├── <b>progress/</b>', k: 'progress', f: 'progress/sessions.jsonl' },
+  { t: '│   ├── status.md', k: 'progress', f: 'progress/status.md', leaf: true },
+  { t: '│   ├── log.md', k: 'progress', f: 'progress/log.md', leaf: true },
+  { t: '│   └── sessions.jsonl', k: 'progress', f: 'progress/sessions.jsonl', leaf: true },
+  { t: '├── <b>wiki/</b>', k: 'wiki', f: 'wiki/concepts/idempotency.md' },
+  { t: '│   ├── index.md', k: 'wiki', f: 'wiki/index.md', leaf: true },
+  { t: '│   └── concepts/idempotency.md', k: 'wiki', f: 'wiki/concepts/idempotency.md', leaf: true },
+  { t: '├── <b>notes/</b>', k: 'notes', f: 'notes/03-idempotency.md' },
+  { t: '│   └── 03-idempotency.md', k: 'notes', f: 'notes/03-idempotency.md', leaf: true },
+  { t: '├── <b>exams/</b>', k: 'exams', f: 'exams/02/exam.json' },
+  { t: '│   └── 02/exam.json', k: 'exams', f: 'exams/02/exam.json', leaf: true },
+  { t: '└── <b>cards/</b>', k: 'cards', f: 'cards/cards.json' },
+  { t: '    └── cards.json', k: 'cards', f: 'cards/cards.json', leaf: true },
+];
+const previews: Record<string, string> = {
+  'learning.md': '## Mission\nread an api spec without guessing\n\n## Record\n### 0012 — confused safe with idempotent — corrected',
+  'progress/status.md': '## Up next\n- [ ] idempotency keys\n- [ ] exam 02',
+  'progress/log.md': '| Date       | Exam | MC  | Rubric |\n| 2026-09-26 | 02   | 4/5 | 2/3    |',
+  'progress/sessions.jsonl': '{"event":"start","at":"2026-09-26T10:10","by":"app"}\n{"event":"activity","kind":"teaching","detail":"idempotency keys"}\n{"event":"end","at":"2026-09-26T11:02","by":"hook"}',
+  'wiki/index.md': '- [Idempotency](concepts/idempotency.md)\n- [Safe method](concepts/safe-method.md)',
+  'wiki/concepts/idempotency.md': 'type: Concept\ndepends_on: [safe-method]\nstudied: [2026-09-22T1700, 2026-09-26T1010]\nsources: rfc 9110, mdn',
+  'notes/03-idempotency.md': '# Idempotency\nsent once or five times, the server ends up the same.',
+  'exams/02/exam.json': '{ "type": "multiple_choice",\n  "q": "which method survives three retries?" }',
+  'cards/cards.json': '{ "front": "Is POST idempotent?",\n  "back": "No: it creates something new each time." }',
+};
+const rows = [
+  { k: 'learning', f: 'learning.md', name: 'learning.md', text: "your mission, what you've shown you know, what you got corrected" },
+  { k: 'progress', f: 'progress/sessions.jsonl', name: 'progress/', text: 'where you are, and every study session with what you did in it' },
+  { k: 'wiki', f: 'wiki/concepts/idempotency.md', name: 'wiki/', text: "the teacher's map of the subject: concepts, what each depends on, where it comes from" },
+];
+---
+<section id="memory">
+  <div class="label">06 / memory</div>
+  <div class="cols" data-reveal>
+    <div class="prose">
+      <h2>It remembers what you got wrong.</h2>
+      <p>The teacher keeps no memory between chats. Your topic folder does. Every skill reads it before it writes, so the next lesson starts where the last one ended.</p>
+      <div class="rows">
+        {rows.map((r, i) => <div tabindex="0" data-k={r.k} data-f={r.f} style={`--i:${i}`}><code>{r.name}</code><span>{r.text}</span></div>)}
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-h"><span>~ ❯ tree topics/http-basics</span></div>
+<pre class="tree">{tree.map((line, i) => <><span class="ln" style={`--i:${i}`} data-k={line.k} data-f={line.f} tabindex={line.leaf ? 0 : undefined} set:html={line.t} />{i < tree.length - 1 ? '\n' : ''}</>)}</pre>
+      <div class="peek" aria-live="polite">
+        <div class="panel-h"><span>~ ❯ cat <span class="peek-f">learning.md</span></span><span class="hint">hover or tab a file</span></div>
+        {Object.entries(previews).map(([f, body]) => <pre data-f={f} hidden={f !== 'learning.md'}>{body}</pre>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cols { animation: none; }
+  .ln { display: inline-block; }
+  .ln[data-k], .rows > div { cursor: default; }
+  .rows > div { position: relative; outline: none; }
+  .rows > div::before { content: ""; position: absolute; left: -1px; top: 0; bottom: 0; width: 2px; background: var(--paper); transform: scaleY(0); }
+  .rows > div:hover, .rows > div:focus-visible { background: var(--graphite); color: var(--paper); }
+  .rows > div:hover::before, .rows > div:focus-visible::before { transform: scaleY(1); }
+  .ln:focus-visible { outline: 1px solid var(--fog); outline-offset: 1px; }
+  .tree { position: relative; isolation: isolate; }
+  .peek { border-top: 1px solid var(--iron); }
+  .peek pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; color: var(--fog); min-height: 7.4em; }
+  .peek-f { color: var(--paper); }
+  .hint { color: var(--slate); }
+  #memory[data-focus] .ln { opacity: .3; }
+  #memory[data-focus] .rows > div { opacity: .4; }
+  #memory[data-focus="learning"] [data-k="learning"],
+  #memory[data-focus="progress"] [data-k="progress"],
+  #memory[data-focus="wiki"] [data-k="wiki"],
+  #memory[data-focus="notes"] [data-k="notes"],
+  #memory[data-focus="exams"] [data-k="exams"],
+  #memory[data-focus="cards"] [data-k="cards"] { opacity: 1; color: var(--paper); }
+  #memory .ln.on { background: var(--iron); }
+  @media (max-width: 600px) { .hint { display: none; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .ln, .rows > div, .rows > div::before, .rows code { transition: opacity .2s ease, color .2s ease, background-color .2s ease, transform .25s cubic-bezier(.2, .7, .2, 1); }
+    .rows > div:hover code, .rows > div:focus-visible code { transform: translateX(4px); }
+    .rows code { display: inline-block; }
+    .tree::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 20px; height: 1.6em; background: var(--iron); border-left: 2px solid var(--paper); opacity: 0; pointer-events: none; }
+    #memory[data-focus] .tree::before { display: none; }
+    @keyframes memory-rise { from { opacity: 0; transform: translateY(16px); } }
+    @keyframes memory-draw { from { opacity: 0; transform: translateX(-14px); } }
+    @keyframes memory-cursor { from { opacity: 1; transform: translateY(0); } to { opacity: 1; transform: translateY(calc(14 * 1.6em)); } }
+    @keyframes memory-float { from { transform: translateY(48px); } to { transform: translateY(-48px); } }
+    @keyframes memory-line { from { transform: scaleX(0); } }
+    .rows > div:not(:last-child)::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--slate); transform-origin: left; }
+    @supports (animation-timeline: view()) {
+      .prose > * { animation-name: memory-rise; animation-timing-function: linear; animation-fill-mode: both; animation-duration: auto; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+      .prose > .rows { animation: none; }
+      .rows > div { animation-name: memory-rise; animation-timing-function: linear; animation-fill-mode: both; animation-duration: auto; animation-timeline: view(); animation-range: entry calc(10% + var(--i) * 12%) entry calc(60% + var(--i) * 12%); }
+      .rows > div:not(:last-child)::after { animation-name: memory-line; animation-timing-function: ease-out; animation-fill-mode: both; animation-duration: auto; animation-timeline: view(); animation-range: entry 40% cover 40%; }
+      .panel { view-timeline-name: --memory-tree; animation-name: memory-float; animation-timing-function: linear; animation-fill-mode: both; animation-duration: auto; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+      .ln { animation-name: memory-draw; animation-timing-function: linear; animation-fill-mode: both; animation-duration: auto; animation-timeline: --memory-tree; animation-range: cover calc(2% + var(--i) * 1.6%) cover calc(10% + var(--i) * 1.6%); }
+      .tree::before { animation-name: memory-cursor; animation-timing-function: steps(15, jump-none); animation-fill-mode: none; animation-duration: auto; animation-timeline: --memory-tree; animation-range: cover 36% cover 62%; }
+    }
+    :global(.reveal-io) #memory .prose, :global(.reveal-io) #memory .ln { transition: opacity .5s ease-out, transform .5s cubic-bezier(.2, .7, .2, 1); }
+    :global(.reveal-io) #memory .ln { transition-delay: calc(.2s + var(--i) * 60ms); }
+    :global(.reveal-io) #memory .cols:not(.in) .prose { opacity: 0; transform: translateY(12px); }
+    :global(.reveal-io) #memory .cols:not(.in) .ln { opacity: 0; transform: translateX(-10px); }
+    :global(.reveal-io) #memory .cols.in .tree::before { animation-name: memory-cursor; animation-timing-function: steps(15, jump-none); animation-duration: 2.4s; animation-delay: 1.4s; animation-fill-mode: none; }
+  }
+</style>
+
+<script>
+  let memoryAbort: AbortController | null = null;
+  document.addEventListener('astro:page-load', () => {
+    const root = document.getElementById('memory');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = '1';
+    memoryAbort?.abort();
+    memoryAbort = new AbortController();
+    const { signal } = memoryAbort;
+    const name = root.querySelector('.peek-f');
+    const pages = root.querySelectorAll<HTMLElement>('.peek pre[data-f]');
+    const lines = root.querySelectorAll<HTMLElement>('.ln');
+    const show = (el: HTMLElement | null) => {
+      lines.forEach(l => l.classList.toggle('on', l === el || (!!el && !el.classList.contains('ln') && l.tabIndex === 0 && l.dataset.f === el.dataset.f)));
+      if (!el) { delete root.dataset.focus; return; }
+      root.dataset.focus = el.dataset.k;
+      const file = el.dataset.f;
+      pages.forEach(p => { p.hidden = p.dataset.f !== file; });
+      if (name && file) name.textContent = file;
+    };
+    const pick = (e: Event) => show((e.target as Element).closest<HTMLElement>('[data-k]'));
+    root.addEventListener('pointerover', pick, { signal });
+    root.addEventListener('focusin', pick, { signal });
+    root.addEventListener('pointerleave', () => { if (!root.contains(document.activeElement)) show(null); }, { signal });
+    root.addEventListener('focusout', e => { if (!root.contains(e.relatedTarget as Node)) show(null); }, { signal });
+  });
+  document.addEventListener('astro:before-swap', () => { memoryAbort?.abort(); memoryAbort = null; });
+</script>

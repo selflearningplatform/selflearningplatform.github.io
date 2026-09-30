@@ -1,0 +1,43 @@
+<section id="pieces">
+  <div class="label">02 / what you get</div>
+  <p class="intro">A teacher that runs in your agent, a method it follows, and a local app where you do the work. Use it for a book, a certification, a course or a tool's docs.</p>
+  <div class="cells" data-reveal>
+    <div style="--i:0"><div class="t"><strong>teacher</strong><span>your agent</span></div><p>Each topic gets a persona: the kind of person who would teach that subject in real life. A researcher checks facts before they reach you.</p><div class="rule">teacher-&lt;slug&gt; · researcher</div></div>
+    <div style="--i:1"><div class="t"><strong>method</strong><span>ten skills</span></div><p>Measure your level, teach, summarize, build exams and exercises, grade, make cards, plan the session. Same steps every time.</p><div class="rule">agent/skills/slp-*/SKILL.md</div></div>
+    <div style="--i:2"><div class="t"><strong>app</strong><span>uv run slp</span></div><p>Runs on localhost. Notes with Mermaid, LaTeX and images, typed or dictated: Whisper transcribes on your machine. Exams, exercises, cards. It records every study session on its own.</p><div class="rule">1 notes · 2 exams · 3 cards</div></div>
+  </div>
+</section>
+
+<style>
+  .cells { animation: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes pieces-rise { from { opacity: 0; transform: translateY(24px); } }
+    @supports (animation-timeline: view()) {
+      .cells > div { animation-name: pieces-rise; animation-timing-function: linear; animation-fill-mode: both; animation-duration: auto; animation-timeline: view(); animation-range: entry calc(var(--i) * 12%) entry calc(50% + var(--i) * 12%); }
+    }
+    :global(.reveal-io) .cells > div { transition: opacity .6s ease-out, transform .6s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--i) * 120ms); }
+    :global(.reveal-io) .cells:not(.in) > div { opacity: 0; transform: translateY(24px); }
+  }
+</style>
+
+<script>
+  // ponytail: shared IO reveal fallback for every [data-reveal] on the page lives here, move to a module if another page needs it
+  let observer: IntersectionObserver | null = null;
+  document.addEventListener('astro:page-load', () => {
+    const targets = document.querySelectorAll('[data-reveal]');
+    if (!targets.length || !('IntersectionObserver' in window)) return;
+    if (CSS.supports('animation-timeline: view()') || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.documentElement.classList.add('reveal-io');
+    observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (!entry.isIntersecting && entry.boundingClientRect.top > 0) return;
+      entry.target.classList.add('in');
+      observer?.unobserve(entry.target);
+    }), { rootMargin: '0px 0px -12% 0px' });
+    targets.forEach(el => observer!.observe(el));
+  });
+  document.addEventListener('astro:before-swap', () => {
+    observer?.disconnect();
+    observer = null;
+    document.documentElement.classList.remove('reveal-io');
+  });
+</script>

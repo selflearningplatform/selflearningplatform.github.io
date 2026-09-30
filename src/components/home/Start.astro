@@ -1,0 +1,92 @@
+---
+const GH = 'https://github.com/GustavoPenaBeltrami/self-learning-platform';
+---
+<section id="start">
+  <div class="label">08 / get started</div>
+  <p class="intro">Have this ready: what you want to study, your sources, a deadline, how often, and why.</p>
+  <div class="steps" data-reveal>
+    <div class="step"><span>01 · install: get uv, clone the repo and start the app</span><button class="copy" type="button" hidden>copy</button>
+<pre><span class="c">$</span> curl -LsSf https://astral.sh/uv/install.sh | sh
+<span class="c">$</span> git clone {GH}.git
+<span class="c">$</span> cd self-learning-platform && uv run slp</pre></div>
+    <div class="step"><span>02 · set up your agent: paste this once</span><button class="copy" type="button" hidden>copy</button>
+<pre>Read AGENTS.md, then read agent/skills/slp-setup/SKILL.md and follow it.</pre></div>
+    <div class="step"><span>03 · start your first topic, then begin every session with /slp-session</span><button class="copy" type="button" hidden>copy</button>
+<pre>/slp-init  I want to start studying HTTP.</pre></div>
+  </div>
+  <p class="note">// windows: see <a href="/docs/install">installation</a></p>
+</section>
+
+<style>
+  .steps { animation: none; }
+  .step { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+  .step pre { grid-column: 1 / -1; }
+  .copy { font-size: 11px; }
+  .typing::after { content: ""; display: inline-block; width: .55em; height: 1.1em; vertical-align: text-bottom; background: var(--chalk); }
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes start-rise { from { opacity: 0; transform: translateY(16px); } }
+    @supports (animation-timeline: view()) {
+      .step { animation-name: start-rise; animation-timing-function: linear; animation-fill-mode: both; animation-duration: auto; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+    }
+    :global(.reveal-io) .step { transition: opacity .6s ease-out, transform .6s cubic-bezier(.2, .7, .2, 1); }
+    :global(.reveal-io) .step:nth-child(2) { transition-delay: .12s; }
+    :global(.reveal-io) .step:nth-child(3) { transition-delay: .24s; }
+    :global(.reveal-io) .steps:not(.in) .step { opacity: 0; transform: translateY(16px); }
+  }
+</style>
+
+<script>
+  let observer: IntersectionObserver | null = null;
+  let frames: number[] = [];
+  const typeIn = (pre: HTMLElement, nodes: Text[], texts: string[]) => {
+    pre.classList.add('typing');
+    const start = performance.now();
+    const step = (now: number) => {
+      let budget = Math.floor((now - start) / 12);
+      nodes.forEach((node, i) => {
+        node.data = texts[i].slice(0, Math.max(budget, 0));
+        budget -= texts[i].length;
+      });
+      if (budget < 0) frames.push(requestAnimationFrame(step));
+      else { pre.classList.remove('typing'); pre.style.minHeight = ''; }
+    };
+    frames.push(requestAnimationFrame(step));
+  };
+  document.addEventListener('astro:page-load', () => {
+    const pres = document.querySelectorAll<HTMLElement>('#start .step pre');
+    if (!pres.length) return;
+    pres.forEach(pre => {
+      const text = (pre.textContent ?? '').replace(/^\$ /gm, '');
+      const button = pre.parentElement?.querySelector<HTMLButtonElement>('.copy');
+      if (!button || !navigator.clipboard) return;
+      button.hidden = false;
+      button.addEventListener('click', () => navigator.clipboard.writeText(text).then(() => {
+        button.textContent = '✓ copied';
+        setTimeout(() => { button.textContent = 'copy'; }, 1600);
+      }));
+    });
+    if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const pending = new Map<Element, [Text[], string[]]>();
+    pres.forEach(pre => {
+      const walker = document.createTreeWalker(pre, NodeFilter.SHOW_TEXT);
+      const nodes: Text[] = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode as Text);
+      pre.style.minHeight = `${pre.offsetHeight}px`;
+      pending.set(pre, [nodes, nodes.map(n => n.data)]);
+      nodes.forEach(n => { n.data = ''; });
+    });
+    observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (!entry.isIntersecting && entry.boundingClientRect.top > 0) return;
+      const [nodes, texts] = pending.get(entry.target)!;
+      observer?.unobserve(entry.target);
+      typeIn(entry.target as HTMLElement, nodes, texts);
+    }), { rootMargin: '0px 0px -15% 0px' });
+    pres.forEach(pre => observer!.observe(pre));
+  });
+  document.addEventListener('astro:before-swap', () => {
+    observer?.disconnect();
+    observer = null;
+    frames.forEach(cancelAnimationFrame);
+    frames = [];
+  });
+</script>

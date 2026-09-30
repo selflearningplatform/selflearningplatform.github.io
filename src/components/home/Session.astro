@@ -1,0 +1,242 @@
+<section id="session">
+  <div class="label">05 / a session</div>
+  <h2>Your session. Your call.</h2>
+  <p class="intro">Every session starts with <code>/slp-session</code>. You decide what to do; the teacher adapts and writes it all down.</p>
+  <div class="sim panel">
+    <div class="panel-h"><span>● session · http-basics</span><span>elapsed <span class="clock">00:00</span></span></div>
+    <div class="sim-grid">
+      <div class="sim-term">
+        <div class="panel-h"><span>agent</span><span>~/topics/http-basics</span></div>
+        <div class="sim-log" aria-live="polite" aria-label="agent transcript" tabindex="0"></div>
+        <div class="sim-choices" role="group" aria-label="choose what to do"></div>
+      </div>
+      <div class="sim-side">
+        <div class="panel-h"><span>app</span><span class="sim-view-t">progress</span></div>
+        <div class="sim-view"></div>
+        <div class="panel-h"><span>written to topics/http-basics/</span><span class="sim-count">0</span></div>
+        <ul class="sim-files"><li class="sim-empty">nothing yet</li></ul>
+      </div>
+    </div>
+    <div class="panel-h sim-foot"><span>activities <span class="sim-acts">—</span></span></div>
+  </div>
+</section>
+
+<style is:global>
+  #session h2 { margin-bottom: 12px; }
+  #session .intro { margin-bottom: 32px; }
+  #session .sim-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+  #session .sim-term { border-right: 1px solid var(--iron); display: grid; grid-template-rows: auto auto 1fr; min-width: 0; }
+  #session .sim-side { display: grid; grid-template-rows: auto 1fr auto auto; min-width: 0; }
+  #session .sim-log { height: 340px; overflow-y: auto; padding: 16px; font-size: 13px; color: var(--chalk); overflow-wrap: anywhere; }
+  #session .sim-log:focus-visible, #session .sim-choices button:focus-visible { outline: 1px solid var(--paper); outline-offset: 2px; }
+  #session .sim-log p { margin: 0 0 6px; }
+  #session .sim-log .you { color: var(--paper); font-weight: 700; margin-top: 12px; }
+  #session .sim-log .you::before { content: "❯ "; color: var(--steel); }
+  #session .sim-log .app { color: var(--fog); }
+  #session .sim-log .app::before { content: "app  "; color: var(--steel); }
+  #session .sim-log code { color: var(--paper); }
+  #session .sim-log .cur::after { content: "▍"; color: var(--steel); }
+  #session .sim-choices { display: flex; flex-wrap: wrap; align-content: start; gap: 8px; min-height: 104px; padding: 14px 16px; border-top: 1px solid var(--iron); }
+  #session .sim-choices button { background: none; border: 1px solid var(--slate); color: var(--paper); font: inherit; font-size: 12px; padding: 6px 12px; cursor: pointer; }
+  #session .sim-choices button:hover { border-color: var(--fog); }
+  #session .sim-choices button.done { color: var(--fog); }
+  #session .sim-choices button.done::before { content: "✓ "; }
+  #session .sim-choices button.quiet { border-color: var(--iron); color: var(--fog); }
+  #session .sim-view { height: 240px; overflow-y: auto; padding: 16px; display: grid; gap: 10px; align-content: start; font-size: 13px; color: var(--chalk); border-bottom: 1px solid var(--iron); }
+  #session .sim-view .m { color: var(--fog); }
+  #session .sim-view .big { font-size: 15px; color: var(--paper); }
+  #session .sim-view pre { border: 0; padding: 0; background: none; white-space: pre-wrap; font-size: 12px; }
+  #session .sim-view .opts li { padding: 6px 10px; font-size: 12px; }
+  #session .sim-files { list-style: none; margin: 0; padding: 12px 16px; display: grid; gap: 4px; font-size: 12px; color: var(--fog); height: 164px; overflow-y: auto; align-content: start; }
+  #session .sim-files li.new { color: var(--paper); }
+  #session .sim-files li:not(.sim-empty)::before { content: "✓ "; }
+  #session .sim-foot { border-top: 1px solid var(--iron); border-bottom: 0; }
+  #session .sim-acts { color: var(--chalk); }
+  #session .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  @media (max-width: 760px) {
+    #session .sim-grid { grid-template-columns: minmax(0, 1fr); }
+    #session .sim-term { border-right: 0; border-bottom: 1px solid var(--iron); }
+    #session .sim-log { height: 300px; }
+    #session .sim-choices { min-height: 148px; }
+  }
+</style>
+
+<script>
+  type Line = [string, string];
+  type Step = { say: Line[] | (() => Line[]); view?: string; act?: string; files?: string[]; ask?: [string, string][]; then?: string; menu?: boolean; flag?: string; end?: boolean };
+
+  const tree: Record<string, Step> = {
+    start: { view: 'progress', say: [['you', '/slp-session'], ['agent', 'http-basics · unit 03 read, no notes yet'], ['agent', '2 cards due · exam 02 waiting for a grade'], ['agent', 'what today?']], menu: true },
+    menu: { say: [['agent', 'what next?']], menu: true },
+    learn: { view: 'material', say: [['you', '/slp-teach 03'], ['agent', 'unit 03: idempotency. you read it, no notes yet'], ['agent', 'before i explain: is `GET /orders` safe to retry? why?']], ask: [['yes, it only reads', 'learnOk'], ['no, it can duplicate orders', 'learnNo']] },
+    learnOk: { say: [['you', 'yes, it only reads'], ['agent', '✓ right. same request, same state']], then: 'learn2' },
+    learnNo: { say: [['you', 'no, it can duplicate orders'], ['agent', '✕ not quite. GET only reads, so a retry changes nothing'], ['agent', '● noted in learning.md']], files: ['learning.md'], then: 'learn2' },
+    learn2: { say: [['agent', 'now `POST /orders`. the client times out. retry it?']], ask: [['yes, same as GET', 'learn2No'], ['only with an idempotency key', 'learn2Ok']] },
+    learn2Ok: { say: [['you', 'only with an idempotency key'], ['agent', '✓ right. that was the next node']], then: 'learnEnd' },
+    learn2No: { say: [['you', 'yes, same as GET'], ['agent', '✕ POST is not idempotent. two retries, two orders'], ['agent', '● noted in learning.md']], files: ['learning.md'], then: 'learnEnd' },
+    learnEnd: { view: 'notes', act: 'teaching', flag: 'unit', say: [['agent', 'lesson built from your answers: safe → idempotent → keys'], ['agent', '✓ notes/03-idempotency.md'], ['agent', '✓ learning.md · glossary: idempotent'], ['agent', '✓ wiki updated']], files: ['notes/03-idempotency.md', 'learning.md', 'wiki/concepts/idempotency.md'], then: 'menu' },
+    read: { view: 'material', act: 'reading', say: [['you', "i'll read unit 03 myself"], ['agent', 'ok. take notes in the app: type, or `ctrl+m` to dictate'], ['agent', 'or `/slp-summarize` the chapter into a note']], ask: [['dictate notes', 'readVoice'], ['/slp-summarize ch 3', 'readSum']] },
+    readVoice: { view: 'dictate', say: [['app', '● dictating · ctrl+m'], ['app', '"an idempotent request has the same effect once or ten times"'], ['app', '✓ saved · notes/03-idempotency.md']], files: ['notes/03-idempotency.md'], then: 'menu' },
+    readSum: { view: 'notes', say: [['you', '/slp-summarize ch 3'], ['agent', 'reading resources/http-guide.pdf · ch 3'], ['agent', '✓ notes/03-idempotency.md · 4 sections']], files: ['notes/03-idempotency.md'], then: 'menu' },
+    practice: { say: [['you', 'i want to practice'], ['agent', 'exam or exercise?']], ask: [['/slp-exam 03', 'exam'], ['/slp-exercises 03', 'exercise']] },
+    exam: { view: 'exam', act: 'exam', say: [['you', '/slp-exam 03'], ['agent', '✓ exams/03-idempotency/exam.json · 8 questions'], ['agent', 'multiple choice, open, practical, oral'], ['agent', 'sit it in the app, exams tab']], files: ['exams/03-idempotency/exam.json'], ask: [['submit attempt', 'examDone']] },
+    examDone: { say: [['app', '✓ attempt saved · 8 of 8 answered'], ['agent', '`/slp-grade` it when you want feedback']], files: ['exams/03-idempotency/attempts/'], then: 'menu' },
+    exercise: { view: 'exercise', act: 'practice', say: [['you', '/slp-exercises 03'], ['agent', '✓ exercises/retry-policy/prompt.md'], ['agent', 'write an ADR: retries for `POST /payments`. one page']], files: ['exercises/retry-policy/prompt.md'], ask: [['submit the ADR', 'exerciseDone']] },
+    exerciseDone: { say: [['app', '✓ attempt saved'], ['agent', '`/slp-grade` it when you want feedback']], files: ['exercises/retry-policy/attempts/'], then: 'menu' },
+    feedback: { view: 'grade', act: 'feedback', say: [['you', '/slp-grade exam 02'], ['agent', 'grading against the rubric'], ['agent', '7/10'], ['agent', '✕ q2 put vs patch → see methods and status codes › put vs patch'], ['agent', '✕ q5 409 vs 422 → see methods and status codes › client errors'], ['agent', '● 2 mistakes → learning.md']], files: ['exams/02-methods-and-codes/attempts/', 'learning.md'], ask: [['go over q2', 'fbQ2']] },
+    fbQ2: { say: [['you', 'go over q2'], ['agent', 'PUT replaces the whole resource. PATCH changes part of it'], ['agent', 'which one is idempotent by definition?']], ask: [['PUT', 'fbOk'], ['PATCH', 'fbNo']] },
+    fbOk: { say: [['you', 'PUT'], ['agent', '✓ right. PATCH can be, not by definition']], then: 'menu' },
+    fbNo: { say: [['you', 'PATCH'], ['agent', '✕ PUT. PATCH can be, not by definition'], ['agent', '● noted in learning.md']], files: ['learning.md'], then: 'menu' },
+    review: { view: 'cardFront', act: 'cards', say: [['you', 'cards'], ['app', 'cards tab · 2 due · box 2']], ask: [['flip', 'reviewBack']] },
+    reviewBack: { view: 'cardBack', say: [['app', 'flipped. how did it go?']], ask: [["knew it", 'revKnew'], ["didn't know", 'revMiss'], ['unsure', 'revUnsure']] },
+    revKnew: { say: [['app', '✓ knew it · box 2 → box 3']], files: ['cards/reviews.jsonl'], then: 'reviewEnd' },
+    revMiss: { say: [['app', "✕ didn't know · back to box 1"]], files: ['cards/reviews.jsonl'], then: 'reviewEnd' },
+    revUnsure: { say: [['app', '● unsure · goes over with the agent'], ['agent', 'PUT sends the full state. twice, same state'], ['agent', 'POST adds. twice, two resources']], files: ['cards/reviews.jsonl'], then: 'reviewEnd' },
+    reviewEnd: { say: [['agent', '1 card reviewed · 1 left for tomorrow'], ['agent', '`/slp-quiz` any time to re-measure your level']], then: 'menu' },
+    end: { view: 'sessions', end: true, files: ['progress/sessions.jsonl', 'progress/status.md'], say: () => [['you', "i'm done for today"], ['agent', `✓ session closed · ${fmt(state.secs)}`], ...(state.flags.has('unit') ? [['agent', '✓ unit 03 marked done'] as Line] : []), ['agent', state.picks.length ? `you chose: ${[...new Set(state.picks)].join(' → ')}` : 'you chose nothing. session recorded anyway']] },
+  };
+
+  const menu: [string, string][] = [['learn', 'learn'], ['read', 'read'], ['practice', 'practice'], ['feedback', 'feedback'], ['review', 'review']];
+
+  const views: Record<string, () => [string, string]> = {
+    progress: () => ['progress', '<p class="big">http-basics</p><ul class="dash"><li>unit 03 · read</li><li>notes · none</li><li>cards · 2 due</li><li>exam 02 · waiting for a grade</li></ul>'],
+    material: () => ['material · http-guide.pdf · p.31', '<p class="big">3.2 idempotent methods</p><p>An idempotent request has the same effect whether you send it once or ten times. GET, HEAD, PUT and DELETE are idempotent. POST is not.</p>'],
+    notes: () => ['notes · 03-idempotency', '<pre># idempotency\n## safe vs idempotent\n- GET only reads: safe to retry\n- PUT: same request, same state\n## retries\n- POST adds: retry needs an idempotency key</pre>'],
+    dictate: () => ['notes · ● ctrl+m', '<pre># idempotency\n- an idempotent request has the same effect once or ten times▍</pre>'],
+    exam: () => ['exams · 03 · 1 of 8', '<p class="big">a client times out after POST /orders. is it safe to retry?</p><ul class="opts"><li><b>a</b>yes, always</li><li><b>b</b>only with an idempotency key</li><li><b>c</b>if the server returned 200</li><li><b>d</b>only over https</li></ul>'],
+    exercise: () => ['exercises · retry-policy', '<p class="big">ADR: retries for POST /payments</p><ul class="dash"><li>context · clients retry on timeout</li><li>decision · ?</li><li>consequences · ?</li></ul><p class="m">one page · graded against a rubric</p>'],
+    grade: () => ['exams · 02 · graded', '<p class="big">7/10</p><ul class="dash"><li>✓ q1 · q3 · q4 · q6-q10</li><li>✕ q2 → methods and status codes › put vs patch</li><li>✕ q5 → methods and status codes › client errors</li></ul>'],
+    cardFront: () => ['cards · box 2 · 1 of 2', '<p class="big">is PUT idempotent?</p><p class="m">flip to see the answer</p>'],
+    cardBack: () => ['cards · box 2 · 1 of 2', '<p class="big">is PUT idempotent?</p><p>yes. same request, same state. POST is not.</p>'],
+    sessions: () => ['sessions', `<p class="big">today · ${fmt(state.secs)}</p><ul class="dash">${(state.acts.length ? state.acts : ['none']).map(a => `<li>● ${a}</li>`).join('')}</ul>`],
+  };
+
+  const state = { secs: 0, picks: [] as string[], flags: new Set<string>(), acts: [] as string[], files: new Set<string>() };
+  const fmt = (s: number) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+  const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const rich = (s: string) => esc(s).replace(/`([^`]+)`/g, '<code>$1</code>');
+
+  let cleanup: (() => void) | null = null;
+
+  function init() {
+    const root = document.querySelector<HTMLElement>('#session .sim');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = '1';
+    const q = <T extends HTMLElement>(s: string) => root.querySelector(s) as T;
+    const log = q('.sim-log'), choices = q('.sim-choices'), view = q('.sim-view'), viewT = q('.sim-view-t');
+    const list = q('.sim-files'), count = q('.sim-count'), acts = q('.sim-acts'), clock = q('.clock');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let visible = false, started = false, ended = false, acted = false, timer = 0;
+    let pending: (() => void) | null = null;
+
+    const later = (fn: () => void, ms: number) => { timer = window.setTimeout(() => (visible ? fn() : (pending = fn)), reduce ? 0 : ms); };
+    const tick = window.setInterval(() => { if (visible && started && !ended) clock.textContent = fmt(++state.secs); }, 1000);
+
+    const setView = (key: string) => { const [t, html] = views[key](); viewT.textContent = t; view.innerHTML = html; };
+    const addAct = (a: string) => { if (!state.acts.includes(a)) state.acts.push(a); acts.textContent = state.acts.join(' · '); };
+    const addFiles = (fs: string[]) => {
+      list.querySelector('.sim-empty')?.remove();
+      list.querySelectorAll('.new').forEach(li => li.classList.remove('new'));
+      for (const f of fs) {
+        let li = [...list.children].find(li => li.textContent === f);
+        if (!li) { li = document.createElement('li'); li.textContent = f; list.append(li); }
+        li.classList.add('new');
+        state.files.add(f);
+      }
+      count.textContent = String(state.files.size);
+      list.scrollTop = list.scrollHeight;
+    };
+
+    const button = (label: string, go: string, cls = '') => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = label; b.className = cls;
+      b.addEventListener('click', () => {
+        acted = true;
+        if (menu.some(([, id]) => id === go)) state.picks.push(label);
+        go === 'restart' ? restart() : play(go);
+      });
+      return b;
+    };
+
+    const showChoices = (step: Step) => {
+      const bs: HTMLButtonElement[] = [];
+      if (step.end) bs.push(button('start over', 'restart'));
+      else if (step.menu) {
+        for (const [label, id] of menu) bs.push(button(label, id, state.picks.includes(label) ? 'done' : ''));
+        bs.push(button('end session', 'end', 'quiet'));
+      } else {
+        for (const [label, id] of step.ask || []) bs.push(button(label, id));
+        bs.push(button('back to menu', 'menu', 'quiet'), button('end session', 'end', 'quiet'));
+      }
+      choices.replaceChildren(...bs);
+      if (acted) bs[0].focus({ preventScroll: true });
+    };
+
+    const typeLine = ([who, text]: Line, done: () => void) => {
+      const p = document.createElement('p');
+      p.className = who + ' cur';
+      const shown = document.createElement('span');
+      shown.setAttribute('aria-hidden', 'true');
+      p.append(shown);
+      log.append(p);
+      const plain = text.replace(/`/g, '');
+      let i = 0;
+      const step = () => {
+        i = reduce ? plain.length : Math.min(plain.length, i + (who === 'you' ? 1 : 3));
+        shown.textContent = plain.slice(0, i);
+        log.scrollTop = log.scrollHeight;
+        if (i < plain.length) return later(step, who === 'you' ? 45 : 18);
+        p.classList.remove('cur');
+        shown.innerHTML = rich(text);
+        const sr = document.createElement('span');
+        sr.className = 'sr';
+        sr.textContent = (who === 'you' ? 'you: ' : who + ': ') + plain;
+        p.append(sr);
+        later(done, who === 'you' ? 350 : 220);
+      };
+      later(step, 120);
+    };
+
+    function play(id: string) {
+      const step = tree[id];
+      choices.replaceChildren();
+      if (step.view) setView(step.view);
+      if (step.act) addAct(step.act);
+      if (step.flag) state.flags.add(step.flag);
+      if (step.end) ended = true;
+      const lines = [...(typeof step.say === 'function' ? step.say() : step.say)];
+      const next = () => {
+        const line = lines.shift();
+        if (line) return typeLine(line, next);
+        if (step.files) addFiles(step.files);
+        if (step.end) setView('sessions');
+        if (step.then) later(() => play(step.then!), 500);
+        else showChoices(step);
+      };
+      next();
+    }
+
+    function restart() {
+      clearTimeout(timer);
+      Object.assign(state, { secs: 0, picks: [], flags: new Set(), acts: [], files: new Set() });
+      ended = false;
+      clock.textContent = fmt(0); acts.textContent = '—'; count.textContent = '0';
+      list.innerHTML = '<li class="sim-empty">nothing yet</li>';
+      log.replaceChildren();
+      play('start');
+    }
+
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (!visible) return;
+      if (!started) { started = true; restart(); }
+      else if (pending) { const fn = pending; pending = null; fn(); }
+    }, { threshold: 0.35 });
+    io.observe(root);
+
+    cleanup = () => { clearTimeout(timer); clearInterval(tick); io.disconnect(); };
+  }
+
+  document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:before-swap', () => { cleanup?.(); cleanup = null; });
+</script>
