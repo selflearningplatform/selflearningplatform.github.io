@@ -42,7 +42,7 @@ const current = href => (href === '/' ? path === '/' : path.startsWith(href)) ? 
   <footer><span>独学 · SLP Self Learning Platform  · By <a target="_blank" href="https://www.linkedin.com/in/gustavo-pena-beltrami/">Gustavo</a> to anyone</span><span><a href="https://github.com/GustavoPenaBeltrami/self-learning-platform/blob/main/LICENSE">MIT</a> · ~ EOF</span></footer>
 </main>
 
-<aside class="pip" data-mode="top" hidden transition:persist>
+<aside class="pip" data-mode="bottom" hidden transition:persist>
   <div class="pip-bar">
     <span>demo</span>
     <span>
@@ -51,7 +51,7 @@ const current = href => (href === '/' ? path === '/' : path.startsWith(href)) ? 
       <button type="button" data-act="close" aria-label="close"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button>
     </span>
   </div>
-  <iframe title="SLP demo video" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  <video src="/app/assets/video.mp4" autoplay muted loop playsinline></video>
 </aside>
 <script is:inline>
   (() => {
@@ -61,9 +61,7 @@ const current = href => (href === '/' ? path === '/' : path.startsWith(href)) ? 
     const store = (k, v) => { try { return v === undefined ? sessionStorage.getItem(k) : sessionStorage.setItem(k, v); } catch {} };
     if (performance.getEntriesByType('navigation')[0]?.type === 'reload') try { sessionStorage.removeItem('pip-closed'); } catch {}
     if (store('pip-closed')) return;
-    const id = '3GVoLZFPIgU';
-    pip.querySelector('iframe').src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&modestbranding=1&playsinline=1&rel=0`;
-    pip.dataset.mode = store('pip-mode') || 'top';
+    pip.dataset.mode = store('pip-mode') === 'center' ? 'center' : 'bottom';
     pip.hidden = false;
     const size = pip.querySelector('[data-act="size"]');
     const set = m => {
