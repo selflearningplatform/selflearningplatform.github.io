@@ -46,7 +46,7 @@ Format: [progress/](progress.md).
 
 ## Survey
 
-- **pending attempts**: `attempts/<date>.<ext>` without `<date>.feedback.md`
+- **pending attempts**: `attempts/<date>.<ext>` without `<date>.feedback.md`. A `draft.json` is not pending
 - **due cards**: per topic, by the Leitner rule
 - **unsure cards**: the ones you flagged in the [cards tab](cards-app.md)
 - **finished units** with something missing: the checklist below

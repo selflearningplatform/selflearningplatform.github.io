@@ -10,6 +10,7 @@ One folder per exam. The folder name is the exam's id: the unit number and title
 ```tree
 exams/01-methods-and-codes/
 ├── exam.json
+├── draft.json                        # a sitting in progress, autosaved by the app
 └── attempts/
     ├── 2026-09-24T1030.json          # your answers
     ├── 2026-09-24T1030-p3.webm       # oral answer to question 3
@@ -17,7 +18,7 @@ exams/01-methods-and-codes/
 ```
 
 - **written by**: [slp-exam](slp-exam.md) and [slp-quiz](slp-quiz.md) (the exam), the [app](exam-app.md) (attempts), [slp-grade](slp-grade.md) (feedback)
-- **pending**: an attempt without its `.feedback.md`
+- **pending**: an attempt without its `.feedback.md`. `draft.json` is not an attempt: never graded, deleted on submit
 - **second exam on a unit**: `01-methods-and-codes-b`. An exam with attempts is never rewritten or reordered, since attempts point at questions by position
 - **same minute**: a second attempt in the same minute gets `-2`, `-3`…
 

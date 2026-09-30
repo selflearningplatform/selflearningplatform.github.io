@@ -21,4 +21,4 @@ One thing is required. The rest is recommended, not needed.
 | [GitHub](https://github.com/) | to keep your topics in your own private repo |
 | [git](https://git-scm.com/) | to clone the repo |
 
-// the core (the app, notes, exams, cards) needs no agent at all. The agent layer does
+// the core (the app, notes, cards, exams, exercises) needs no agent at all. The agent layer does

@@ -29,10 +29,10 @@ Study app at http://localhost:8321/app/views/notes.html  (ctrl+c to stop)
 ## Layout
 
 ```screen
-┌ 1 notes  2 exams  3 cards  4 project  5 settings ── clock ── tools ┐
-│ explorer │                                                         │
-│ topics/  │   the view                                              │
-│ index    │                                                         │
+┌ 1 notes  2 cards  3 exams  4 exercises  5 settings ── clock ── tools ┐
+│ explorer │                                                           │
+│ topics/  │   the view                                                │
+│ index    │                                                           │
 └ NORMAL  ~/path  status · session · zoom % · width px · theme · Top ┘
 ```
 
@@ -46,7 +46,7 @@ Study app at http://localhost:8321/app/views/notes.html  (ctrl+c to stop)
 | view | what it is |
 | --- | --- |
 | [notes](editor.md) | list of topics, and the notebook of each one |
-| [exams](exam-app.md) | list of exams per topic, and the simulator |
 | [cards](cards-app.md) | card sets per topic, and the flashcard study |
-| project | the project's own README: name, quick start, how it works, AI teacher, your topics, principles |
+| [exams](exam-app.md) | list of exams per topic, and the simulator |
+| [exercises](exercises-app.md) | prompts and your submitted answers per topic, with feedback |
 | [settings](settings.md) | global (profile, fonts, dictation model), shortcuts, cards and themes. Also at `/settings` |

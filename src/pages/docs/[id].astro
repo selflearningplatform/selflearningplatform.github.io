@@ -54,10 +54,10 @@ const site = Astro.site.origin;
 </Base>
 
 <script>
-  const links = [...document.querySelectorAll('.side-nav a')];
-  document.querySelector('.filter').addEventListener('input', e => {
+  document.addEventListener('input', e => {
+    if (!e.target.matches('.filter')) return;
     const q = e.target.value.trim().toLowerCase();
-    links.forEach(a => a.hidden = !a.textContent.toLowerCase().includes(q));
+    document.querySelectorAll('.side-nav a').forEach(a => a.hidden = !a.textContent.toLowerCase().includes(q));
     document.querySelectorAll('.side details').forEach(d => {
       d.hidden = !d.querySelector('a:not([hidden])');
       if (q) d.open = true;

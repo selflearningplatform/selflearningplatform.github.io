@@ -42,7 +42,7 @@ Your material, the app and the agent side by side. Two monitors help.
 ```
 
 - **1 · material**: the PDF, the course, the docs. Whatever you're studying
-- **2 · app**: `uv run slp` in the browser: notes, exams, cards, settings
+- **2 · app**: `uv run slp` in the browser: notes, cards, exams, exercises, settings
 - **3 · agent**: open at the repo root. Teaches, builds exams, grades
 
 Next: [getting started](getting-started.md).

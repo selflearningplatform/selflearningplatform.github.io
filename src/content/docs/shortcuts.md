@@ -40,6 +40,17 @@ See [exams](exam-app.md). `R` and `T` act on the oral question you are on, or th
 | `⏎` after grading | retake |
 | `Esc` | back to the list. Fixed |
 
+## Exercises
+
+See [exercises](exercises-app.md).
+
+| key | action |
+| --- | --- |
+| `⌘⏎` | submit the answer |
+| `ctrl+i` | attach an image |
+| `⏎` after submitting | write again |
+| `Esc` | leave the editor, then back to the list. Fixed |
+
 ## Cards
 
 See [cards](cards-app.md).

@@ -19,7 +19,8 @@ Checks each rubric or prompt point, says what's missing (not just "it's wrong"),
 ```
 
 - **grades**: exam, exercise and quiz attempts. Oral answers recorded as audio are transcribed first
-- **pending**: `attempts/<date>.<ext>` without its `<date>.feedback.md`
+- **pending**: `attempts/<date>.<ext>` without its `<date>.feedback.md`. A `draft.json` is never graded
+- **images**: an exercise attempt's `![](img/<file>)` images (diagrams, concept maps, photos of paper) are looked at and graded against the prompt. Missing or unreadable = the criterion is not met, and the feedback says so
 - **facts**: graded against the version you were taught; doubtful ones go to the [researcher](researcher.md)
 - **writes**: `attempts/<date>.feedback.md`, `learning.md`, a row in `progress/log.md`, `status.md` if the present changed
 - **after**: the score, the weakest point and one next step: `slp-teach`, `slp-exercises` or `slp-cards`

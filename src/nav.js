@@ -26,6 +26,7 @@ export const NAV = [
     ['deploy', 'deploy'],
     ['editor', 'notes', 'view'],
     ['exam-app', 'exams', 'view'],
+    ['exercises-app', 'exercises', 'view'],
     ['cards-app', 'cards', 'view'],
     ['settings', 'settings', 'view'],
     ['dictation', 'dictation'],

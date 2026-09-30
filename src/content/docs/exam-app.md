@@ -16,6 +16,10 @@ Sit an exam built by [slp-exam](slp-exam.md). The level quiz of [slp-quiz](slp-q
 - **progress**: `N/M answered` in the status line
 - **diagrams and formulas** in questions and options render as in the notes
 
+## Draft
+
+Answers are saved as a draft about a second after you change anything (`draft saved` in the status line) and when the page is hidden or closed. Open the exam again and it resumes: picked options, written text (also for oral questions answered in writing) and the question order come back (`draft restored`). Oral audio is not drafted: recordings are lost if you leave. The draft is deleted when you finish the exam.
+
 ## Grading
 
 `⏎` finishes the exam. Multiple choice is graded right away: a score meter, `✓` on the right option, `✕` on yours, and the explanation. `PASS` from 70%. Open, oral and practical answers show `pending grading`.

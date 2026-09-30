@@ -19,7 +19,7 @@ The settings tab lists four sections: **global**, **shortcuts**, **cards** and *
 
 ## Shortcuts
 
-The key of every action, grouped by page: notes, exams, cards. Click a key, press the new combo; `Esc` cancels. A key already used on the same screen is refused. Notes keys need `ctrl`, `alt` or `meta` and can't take one the editor uses (`⌘B`, `⌘C`, `⌘Z`…). Reset one key or all. Fixed keys are shown but can't be changed. See [shortcuts](shortcuts.md).
+The key of every action, grouped by page: notes, cards, exams, exercises. Click a key, press the new combo; `Esc` cancels. A key already used on the same screen is refused. Notes keys need `ctrl`, `alt` or `meta` and can't take one the editor uses (`⌘B`, `⌘C`, `⌘Z`…). Reset one key or all. Fixed keys are shown but can't be changed. See [shortcuts](shortcuts.md).
 
 ## Cards
 

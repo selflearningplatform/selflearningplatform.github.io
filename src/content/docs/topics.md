@@ -21,6 +21,7 @@ topics/<slug>/
 ├── exams/
 │   └── <exam>/
 │       ├── exam.json
+│       ├── draft.json
 │       └── attempts/
 │           ├── <date>.json
 │           ├── <date>-p3.webm
@@ -28,6 +29,8 @@ topics/<slug>/
 ├── exercises/
 │   └── <exercise>/
 │       ├── prompt.md
+│       ├── draft.json
+│       ├── img/
 │       └── attempts/
 │           ├── <date>.<ext>
 │           └── <date>.feedback.md

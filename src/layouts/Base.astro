@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 
 const { title, description = 'SLP, the Self Learning Platform: an agent-powered hub for self-learners.' } = Astro.props;
 const path = Astro.url.pathname;
@@ -16,6 +17,7 @@ const current = href => (href === '/' ? path === '/' : path.startsWith(href)) ? 
 <link rel="preload" href="/app/vendor/jetbrains-mono/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/app/vendor/jetbrains-mono/JetBrainsMono-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <slot name="head" />
+<ClientRouter />
 <script is:inline>
   const legacy = location.hash.match(/^#(docs\/[\w-]+|docs|identity|home)$/);
   if (legacy) location.replace('/' + legacy[1].replace('home', ''));
@@ -39,5 +41,44 @@ const current = href => (href === '/' ? path === '/' : path.startsWith(href)) ? 
   <slot />
   <footer><span>独学 · SLP Self Learning Platform  · By <a target="_blank" href="https://www.linkedin.com/in/gustavo-pena-beltrami/">Gustavo</a> to anyone</span><span><a href="https://github.com/GustavoPenaBeltrami/self-learning-platform/blob/main/LICENSE">MIT</a> · ~ EOF</span></footer>
 </main>
+
+<aside class="pip" data-mode="top" hidden transition:persist>
+  <div class="pip-bar">
+    <span>demo</span>
+    <span>
+      <a href="https://youtu.be/3GVoLZFPIgU" target="_blank" rel="noopener" aria-label="open on YouTube"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5"/></svg></a>
+      <button type="button" data-act="size"></button>
+      <button type="button" data-act="close" aria-label="close"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button>
+    </span>
+  </div>
+  <iframe title="SLP demo video" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</aside>
+<script is:inline>
+  (() => {
+    if (window.pipInit) return;
+    window.pipInit = true;
+    const pip = document.querySelector('.pip');
+    const store = (k, v) => { try { return v === undefined ? sessionStorage.getItem(k) : sessionStorage.setItem(k, v); } catch {} };
+    if (performance.getEntriesByType('navigation')[0]?.type === 'reload') try { sessionStorage.removeItem('pip-closed'); } catch {}
+    if (store('pip-closed')) return;
+    const id = '3GVoLZFPIgU';
+    pip.querySelector('iframe').src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&modestbranding=1&playsinline=1&rel=0`;
+    pip.dataset.mode = store('pip-mode') || 'top';
+    pip.hidden = false;
+    const size = pip.querySelector('[data-act="size"]');
+    const set = m => {
+      pip.dataset.mode = m; store('pip-mode', m);
+      const big = m === 'center';
+      size.innerHTML = big ? '<svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M2 9.5h8"/></svg>' : '<svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M2.5 2.5h7v7h-7z"/></svg>';
+      size.ariaLabel = big ? 'minimize to bottom right' : 'enlarge to center';
+    };
+    set(pip.dataset.mode);
+    pip.addEventListener('click', e => {
+      const act = e.target.closest('[data-act]')?.dataset.act;
+      if (act === 'size') set(pip.dataset.mode === 'center' ? 'bottom' : 'center');
+      if (act === 'close') { pip.remove(); store('pip-closed', '1'); }
+    });
+  })();
+</script>
 </body>
 </html>
