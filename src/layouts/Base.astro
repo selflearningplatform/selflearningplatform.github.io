@@ -51,7 +51,7 @@ const current = href => (href === '/' ? path === '/' : path.startsWith(href)) ? 
       <button type="button" data-act="close" aria-label="close"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button>
     </span>
   </div>
-  <video src="/app/assets/video.mp4" autoplay muted loop playsinline></video>
+  <video src="/app/assets/video.mp4" muted loop playsinline></video>
 </aside>
 <script is:inline>
   (() => {
@@ -63,6 +63,8 @@ const current = href => (href === '/' ? path === '/' : path.startsWith(href)) ? 
     if (store('pip-closed')) return;
     pip.dataset.mode = store('pip-mode') === 'center' ? 'center' : 'bottom';
     pip.hidden = false;
+    const video = pip.querySelector('video');
+    video.play().catch(() => {});
     const size = pip.querySelector('[data-act="size"]');
     const set = m => {
       pip.dataset.mode = m; store('pip-mode', m);
@@ -74,7 +76,7 @@ const current = href => (href === '/' ? path === '/' : path.startsWith(href)) ? 
     pip.addEventListener('click', e => {
       const act = e.target.closest('[data-act]')?.dataset.act;
       if (act === 'size') set(pip.dataset.mode === 'center' ? 'bottom' : 'center');
-      if (act === 'close') { pip.remove(); store('pip-closed', '1'); }
+      if (act === 'close') { video.pause(); pip.hidden = true; store('pip-closed', '1'); }
     });
   })();
 </script>

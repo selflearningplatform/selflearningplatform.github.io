@@ -105,6 +105,7 @@ section { padding: 96px 0; border-top: 1px solid var(--iron); }
 .rows > div { display: grid; grid-template-columns: minmax(120px, 240px) minmax(0, 1fr); gap: 16px; padding: 14px 20px; border-bottom: 1px solid var(--graphite); align-items: baseline; color: var(--chalk); }
 .rows > div:last-child { border-bottom: 0; }
 .rows .head { color: var(--steel); font-size: 12px; padding: 10px 20px; }
+.max-h-430{max-height: 430px !important;}
 
 pre { margin: 0; padding: 20px; overflow-x: auto; border: 1px solid var(--iron); background: #0a0a0a; font: 400 13px/1.6 "JetBrains Mono", monospace; color: var(--chalk); }
 pre .c { color: var(--steel); }

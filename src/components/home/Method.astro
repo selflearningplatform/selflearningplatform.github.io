@@ -27,7 +27,7 @@ const total = String(steps.length).padStart(2, '0');
         </div>
       </div>
 
-      <div class="view">
+      <div class="view max-h-430">
         <ol class="track" data-track>
           {steps.map((s, i) => (
             <li class:list={['step', { on: i === 0 }]} data-step={i}>
